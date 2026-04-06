@@ -8,8 +8,18 @@ export async function GET(req: NextRequest) {
     const user = await getAuthUser(req);
     if (!user) return unauthorized();
 
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get('search');
+
     const suppliers = await prisma.supplier.findMany({
-      where: { ativo: true },
+      where: {
+        ativo: true,
+        OR: search ? [
+          { nome: { contains: search, mode: 'insensitive' } },
+          { email: { contains: search, mode: 'insensitive' } },
+          { contato: { contains: search, mode: 'insensitive' } },
+        ] : undefined
+      },
       include: { _count: { select: { products: true } } },
       orderBy: { nome: 'asc' },
     });

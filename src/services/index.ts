@@ -18,7 +18,7 @@ export const productsService = {
 };
 
 export const suppliersService = {
-  findAll: () => api.get<Supplier[]>('/suppliers').then((r) => r.data),
+  findAll: (search?: string) => api.get<Supplier[]>('/suppliers', { params: search ? { search } : {} }).then((r) => r.data),
   create: (data: Partial<Supplier>) => api.post<Supplier>('/suppliers', data).then((r) => r.data),
   update: (id: string, data: Partial<Supplier>) => api.patch<Supplier>(`/suppliers/${id}`, data).then((r) => r.data),
 };

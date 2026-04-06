@@ -25,11 +25,18 @@ export const useUpdateProduct = () => {
 };
 
 // Suppliers
-export const useSuppliers = () =>
-  useQuery({ queryKey: ['suppliers'], queryFn: suppliersService.findAll });
+export const useSuppliers = (search?: string) =>
+  useQuery({ queryKey: ['suppliers', search], queryFn: () => suppliersService.findAll(search) });
 export const useCreateSupplier = () => {
   const qc = useQueryClient();
   return useMutation({ mutationFn: suppliersService.create, onSuccess: () => qc.invalidateQueries({ queryKey: ['suppliers'] }) });
+};
+export const useUpdateSupplier = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<Supplier> }) => suppliersService.update(id, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['suppliers'] }),
+  });
 };
 
 // Movements
