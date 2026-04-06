@@ -4,6 +4,7 @@ import {
   alertsService, inventoryService, logsService, usersService,
   clientesService, nfService,
 } from '@/services';
+import type { Supplier } from '@/types';
 
 // Products
 export const useProducts = (search?: string) =>
