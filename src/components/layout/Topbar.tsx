@@ -47,6 +47,11 @@ export function Topbar() {
           </div>
         )}
         <div className="flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '13px' }}>
+          {user?.matricula === '116221' && (
+            <span className="hidden md:flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[9px] font-bold uppercase tracking-wider border border-blue-500/20 ring-4 ring-blue-500/5">
+              Responsável Geral
+            </span>
+          )}
           <div className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-medium text-white"
             style={{ background: '#1a3460', border: '1px solid rgba(255,255,255,0.15)' }}>
             {user?.nome?.substring(0, 2).toUpperCase()}
