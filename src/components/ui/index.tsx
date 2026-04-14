@@ -95,8 +95,17 @@ export function ModalFooter({ children, className }: { children: React.ReactNode
   return <div className={cn("flex justify-end gap-2 px-5 py-3.5 bg-slate-50 border-t border-slate-100", className)}>{children}</div>;
 }
 
-// StatCard
-export function StatCard({ label, value, sub, accent = '#2563eb', valueClass, icon: Icon, footer }: { label: string; value: string | number; sub?: string; accent?: string; valueClass?: string; icon?: any; footer?: React.ReactNode }) {
+interface StatCardProps {
+  label: string;
+  value: string | number;
+  sub?: string;
+  accent?: string;
+  valueClass?: string;
+  icon?: any;
+  footer?: React.ReactNode;
+}
+
+export function StatCard({ label, value, sub, accent = '#2563eb', valueClass, icon: Icon, footer }: StatCardProps) {
   return (
     <div className="group bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-125" />
