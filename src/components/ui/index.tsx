@@ -5,12 +5,12 @@ import { forwardRef, InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttr
 
 // Button
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
 }
 export function Button({ variant = 'secondary', size = 'md', loading, children, className, disabled, ...props }: ButtonProps) {
-  const v = { primary: 'bg-blue-600 text-white hover:bg-blue-700', secondary: 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50', danger: 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100', success: 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100', ghost: 'text-slate-500 hover:bg-slate-100' };
+  const v = { primary: 'bg-blue-600 text-white hover:bg-blue-700', secondary: 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50', danger: 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100', success: 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100', ghost: 'text-slate-500 hover:bg-slate-100', outline: 'bg-transparent border border-slate-200 text-slate-600 hover:bg-slate-50' };
   const s = { sm: 'px-2.5 py-1.5 text-xs', md: 'px-4 py-2 text-sm', lg: 'px-6 py-2.5 text-sm' };
   return (
     <button className={cn('inline-flex items-center justify-center gap-1.5 font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed', v[variant], s[size], className)} disabled={disabled || loading} {...props}>
