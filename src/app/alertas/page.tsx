@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, Badge, Button, PageLoading, InfoBanner } f
 import { MovementModal } from '@/components/modals';
 import { useAlerts, useAlertsResumo } from '@/hooks';
 import { formatDateTime } from '@/lib/utils';
-import { AlertCircle, CheckCircle2, History, PackageSearch, ArrowRightCircle } from 'lucide-react';
+import * as Lucide from 'lucide-react';
 
 export default function AlertasPage() {
   const { data: alertsAtivos = [], isLoading } = useAlerts('ATIVO');
@@ -40,7 +40,7 @@ export default function AlertasPage() {
 
         <InfoBanner type="info" className="border-indigo-100 bg-indigo-50/50 text-indigo-800">
           <div className="flex items-center gap-2 text-xs md:text-sm font-medium">
-            <AlertCircle size={16} />
+            <Lucide.AlertCircle size={16} />
             <span>Clique em "Ver Detalhes" para analisar a divergência e realizar o ajuste corretivo.</span>
           </div>
         </InfoBanner>
@@ -52,7 +52,7 @@ export default function AlertasPage() {
               tab === 'ativos' ? 'bg-white text-indigo-600 shadow-md' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
-            <AlertCircle size={16} /> Ativos
+            <Lucide.AlertCircle size={16} /> Ativos
           </button>
           <button
             onClick={() => setTab('resolvidos')}
@@ -60,7 +60,7 @@ export default function AlertasPage() {
               tab === 'resolvidos' ? 'bg-white text-indigo-600 shadow-md' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
-            <CheckCircle2 size={16} /> Resolvidos
+            <Lucide.CheckCircle2 size={16} /> Resolvidos
           </button>
         </div>
 
@@ -98,7 +98,7 @@ export default function AlertasPage() {
                           isDivergencia ? 'bg-indigo-50 text-indigo-600' :
                           isZerado ? 'bg-rose-50 text-rose-600' : 'bg-amber-50 text-amber-600'
                         }`}>
-                          {isDivergencia ? <PackageSearch size={24} /> : <AlertCircle size={24} />}
+                          {isDivergencia ? <Lucide.PackageSearch size={24} /> : <Lucide.AlertCircle size={24} />}
                         </div>
                         
                         <div className="space-y-1">
@@ -113,12 +113,12 @@ export default function AlertasPage() {
                           </p>
                           <div className="flex items-center gap-3 text-[10px] md:text-xs">
                              <div className="flex items-center gap-1.5 text-slate-500">
-                                <History size={12} className="opacity-50" />
+                                <Lucide.History size={12} className="opacity-50" />
                                 <span>Detectado em {formatDateTime(alert.createdAt)}</span>
                              </div>
                              {alert.resolvidoEm && (
                                <div className="flex items-center gap-1.5 text-emerald-600 font-medium">
-                                 <CheckCircle2 size={12} />
+                                 <Lucide.CheckCircle2 size={12} />
                                  <span>Resolvido</span>
                                </div>
                              )}
@@ -223,7 +223,7 @@ export default function AlertasPage() {
                                quantity: Math.abs(diff)
                              })}
                            >
-                              <ArrowRightCircle size={20} />
+                              <Lucide.ArrowRightCircle size={20} />
                               Confirmar Ajuste Corretivo de {Math.abs(diff)} {alert.product.unidade}
                            </Button>
                            <Button variant="secondary" onClick={() => setExpandedId(null)} className="h-12 rounded-xl">
@@ -241,7 +241,7 @@ export default function AlertasPage() {
              {lista.length === 0 && (
                 <Card className="py-24 text-center flex flex-col items-center gap-4 bg-slate-50/50 border-dashed">
                    <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-emerald-500 shadow-sm border border-slate-100">
-                      <CheckCircle2 size={40} />
+                      <Lucide.CheckCircle2 size={40} />
                    </div>
                    <div>
                      <p className="text-xl font-bold text-slate-900">

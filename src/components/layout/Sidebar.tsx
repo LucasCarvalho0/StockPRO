@@ -1,11 +1,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import {
-  LayoutDashboard, Package, AlertTriangle, ClipboardList,
-  FileText, ScrollText, Boxes, Truck, Users, LogOut,
-  FileDown, Building2, ChevronLeft, ChevronRight,
-} from 'lucide-react';
+import * as Lucide from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth.store';
 import { useUIStore } from '@/store/ui.store';
@@ -13,17 +9,17 @@ import { useAlertsResumo } from '@/hooks';
 import { getDescricaoTurno } from '@/lib/shifts';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, section: 'principal' },
-  { href: '/estoque', label: 'Estoque', icon: Package, section: 'principal' },
-  { href: '/alertas', label: 'Alertas', icon: AlertTriangle, section: 'principal', badge: true },
-  { href: '/nf', label: 'NF de Clientes', icon: FileDown, section: 'operacoes' },
-  { href: '/inventario', label: 'Inventário', icon: ClipboardList, section: 'operacoes' },
-  { href: '/relatorios', label: 'Relatórios', icon: FileText, section: 'operacoes' },
-  { href: '/auditoria', label: 'Auditoria', icon: ScrollText, section: 'operacoes', roles: ['LIDER', 'ADMINISTRADOR'] },
-  { href: '/produtos', label: 'Produtos', icon: Boxes, section: 'cadastros' },
-  { href: '/clientes', label: 'Clientes', icon: Building2, section: 'cadastros' },
-  { href: '/fornecedores', label: 'Fornecedores', icon: Truck, section: 'cadastros' },
-  { href: '/usuarios', label: 'Usuários', icon: Users, section: 'cadastros', roles: ['ADMINISTRADOR'] },
+  { href: '/dashboard', label: 'Dashboard', icon: Lucide.LayoutDashboard, section: 'principal' },
+  { href: '/estoque', label: 'Estoque', icon: Lucide.Package, section: 'principal' },
+  { href: '/alertas', label: 'Alertas', icon: Lucide.AlertTriangle, section: 'principal', badge: true },
+  { href: '/nf', label: 'NF de Clientes', icon: Lucide.FileDown, section: 'operacoes' },
+  { href: '/inventario', label: 'Inventário', icon: Lucide.ClipboardList, section: 'operacoes' },
+  { href: '/relatorios', label: 'Relatórios', icon: Lucide.FileText, section: 'operacoes' },
+  { href: '/auditoria', label: 'Auditoria', icon: Lucide.ScrollText, section: 'operacoes', roles: ['LIDER', 'ADMINISTRADOR'] },
+  { href: '/produtos', label: 'Produtos', icon: Lucide.Boxes, section: 'cadastros' },
+  { href: '/clientes', label: 'Clientes', icon: Lucide.Building2, section: 'cadastros' },
+  { href: '/fornecedores', label: 'Fornecedores', icon: Lucide.Truck, section: 'cadastros' },
+  { href: '/usuarios', label: 'Usuários', icon: Lucide.Users, section: 'cadastros', roles: ['ADMINISTRADOR'] },
 ];
 
 const sections: Record<string, string> = { principal: 'Principal', operacoes: 'Operações', cadastros: 'Cadastros' };
@@ -83,21 +79,21 @@ export function Sidebar() {
         {!isSidebarCollapsed && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-              <Package className="text-white" size={18} />
+              <Lucide.Package className="text-white" size={18} />
             </div>
             <span className="font-display font-bold text-white text-lg tracking-tight">StockPRO</span>
           </div>
         )}
         {isSidebarCollapsed && (
           <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center mx-auto">
-            <Package className="text-white" size={20} />
+            <Lucide.Package className="text-white" size={20} />
           </div>
         )}
         <button 
           onClick={toggleSidebar}
           className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg hover:bg-indigo-500 transition-colors z-50"
         >
-          {isSidebarCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          {isSidebarCollapsed ? <Lucide.ChevronRight size={14} /> : <Lucide.ChevronLeft size={14} />}
         </button>
       </div>
 
@@ -170,7 +166,7 @@ export function Sidebar() {
               onClick={handleLogout}
               className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium transition-all duration-200 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/20"
             >
-              <LogOut size={14} /> Sair do sistema
+              <Lucide.LogOut size={14} /> Sair do sistema
             </button>
           </div>
         ) : (
@@ -183,7 +179,7 @@ export function Sidebar() {
               title="Sair do sistema"
               className="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/20 transition-all"
             >
-              <LogOut size={18} />
+              <Lucide.LogOut size={18} />
             </button>
           </div>
         )}

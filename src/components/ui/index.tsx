@@ -1,6 +1,6 @@
 'use client';
 import { cn } from '@/lib/utils';
-import { X, Loader2 } from 'lucide-react';
+import * as Lucide from 'lucide-react';
 import { forwardRef, InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 // Button
@@ -14,7 +14,7 @@ export function Button({ variant = 'secondary', size = 'md', loading, children, 
   const s = { sm: 'px-2.5 py-1.5 text-xs', md: 'px-4 py-2 text-sm', lg: 'px-6 py-2.5 text-sm' };
   return (
     <button className={cn('inline-flex items-center justify-center gap-1.5 font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed', v[variant], s[size], className)} disabled={disabled || loading} {...props}>
-      {loading && <Loader2 size={14} className="animate-spin" />}{children}
+      {loading && <Lucide.Loader2 size={14} className="animate-spin" />}{children}
     </button>
   );
 }
@@ -81,7 +81,7 @@ export function Modal({ open, onClose, title, children, width = 'max-w-md' }: Mo
       <div className={cn('bg-white rounded-xl shadow-2xl w-full mx-4 overflow-hidden', width)}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
           <h2 className="text-[15px] font-bold text-slate-900 font-display">{title}</h2>
-          <button onClick={onClose} className="w-7 h-7 rounded-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600"><X size={14} /></button>
+          <button onClick={onClose} className="w-7 h-7 rounded-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600"><Lucide.X size={14} /></button>
         </div>
         {children}
       </div>
@@ -149,7 +149,7 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
 
 // PageLoading
 export function PageLoading() {
-  return <div className="flex items-center justify-center h-64"><Loader2 size={28} className="animate-spin text-blue-600" /></div>;
+  return <div className="flex items-center justify-center h-64"><Lucide.Loader2 size={28} className="animate-spin text-blue-600" /></div>;
 }
 
 // InfoBanner

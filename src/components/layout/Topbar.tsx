@@ -1,5 +1,5 @@
 'use client';
-import { Bell, Menu } from 'lucide-react';
+import * as Lucide from 'lucide-react';
 import { useAlertsResumo } from '@/hooks';
 import { useAuthStore } from '@/store/auth.store';
 import { useUIStore } from '@/store/ui.store';
@@ -19,7 +19,7 @@ export function Topbar() {
           onClick={toggleMobileMenu}
           className="lg:hidden p-2 rounded-lg bg-white/5 text-white/70 hover:bg-white/10 transition-colors"
         >
-          <Menu size={20} />
+          <Lucide.Menu size={20} />
         </button>
 
         <div className="flex items-center gap-2.5">
@@ -40,7 +40,7 @@ export function Topbar() {
         <span className="text-[11px] font-mono-custom" style={{ color: 'rgba(255,255,255,0.35)' }}>{formatDate(new Date())}</span>
         {resumo && resumo.ativos > 0 && (
           <div className="relative">
-            <Bell size={16} className="text-white/50" />
+            <Lucide.Bell size={16} className="text-white/50" />
             <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold flex items-center justify-center">
               {resumo.ativos}
             </span>
