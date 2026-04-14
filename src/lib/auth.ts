@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { prisma } from './prisma';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'stockpro-vpc-super-secret-key-2026';
-const JWT_EXPIRES = process.env.JWT_EXPIRES_IN || '24h';
+const JWT_EXPIRES = process.env.JWT_EXPIRES_IN || '7d';
 
 export interface JwtPayload {
   sub: string;
