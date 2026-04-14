@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -7,6 +7,7 @@ import { Modal, ModalBody, ModalFooter, Button, Input, Select, Textarea, InfoBan
 import { useCreateMovement, useProducts, useCreateProduct, useUpdateProduct, useSuppliers, useIniciarInventario, useCreateSupplier } from '@/hooks';
 import { suppliersService, usersService } from '@/services';
 import { useQueryClient } from '@tanstack/react-query';
+import { Eye, EyeOff } from 'lucide-react';
 import type { Product, MovementType, Supplier } from '@/types';
 
 // ─── Movement Modal ────────────────────────────────────────────────────────────
@@ -42,7 +43,6 @@ export function MovementModal({
     } 
   });
 
-  // Efeito para resetar os valores quando o produto ou quantidade pré-selecionada mudar
   useEffect(() => {
     if (open) {
       reset({ 
@@ -217,11 +217,6 @@ export function SupplierModal({ open, onClose, supplier }: { open: boolean; onCl
     </Modal>
   );
 }
-
-import { Eye, EyeOff } from 'lucide-react';
-import { useState } from 'react';
-
-// ... (existing code)
 
 // ─── User Modal ────────────────────────────────────────────────────────────────
 const userSchema = z.object({
