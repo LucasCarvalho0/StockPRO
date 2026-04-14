@@ -7,7 +7,7 @@ import { Modal, ModalBody, ModalFooter, Button, Input, Select, Textarea, InfoBan
 import { useCreateMovement, useProducts, useCreateProduct, useUpdateProduct, useSuppliers, useIniciarInventario, useCreateSupplier } from '@/hooks';
 import { suppliersService, usersService } from '@/services';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, EyeOff } from 'lucide-react';
+import * as Lucide from 'lucide-react';
 import type { Product, MovementType, Supplier } from '@/types';
 
 // ─── Movement Modal ────────────────────────────────────────────────────────────
@@ -263,7 +263,7 @@ export function UserModal({ open, onClose }: { open: boolean; onClose: () => voi
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-[32px] text-slate-400 hover:text-slate-600 transition-colors"
             >
-              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              {showPassword ? <Lucide.EyeOff size={16} /> : <Lucide.Eye size={16} />}
             </button>
           </div>
         </ModalBody>

@@ -10,7 +10,7 @@ import { useUsers } from '@/hooks';
 import { usersService } from '@/services';
 import { useQueryClient } from '@tanstack/react-query';
 import { formatDate } from '@/lib/utils';
-import { Plus, ShieldAlert, Eye, EyeOff } from 'lucide-react';
+import * as Lucide from 'lucide-react';
 import type { User } from '@/types';
 import { useAuthStore } from '@/store/auth.store';
 import { UserModal } from '@/components/modals';
@@ -90,7 +90,7 @@ export default function UsuariosPage() {
           actions={
             isMaster && (
               <Button variant="primary" onClick={handleNovoUsuario}>
-                <Plus size={14} /> Novo Usuário
+                <Lucide.Plus size={14} /> Novo Usuário
               </Button>
             )
           }
@@ -98,7 +98,7 @@ export default function UsuariosPage() {
 
         {!isMaster && (
           <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl flex items-center gap-3 text-amber-800 shadow-sm">
-            <ShieldAlert size={20} className="text-amber-500 shrink-0" />
+            <Lucide.ShieldAlert size={20} className="text-amber-500 shrink-0" />
             <p className="text-sm font-medium">
               Apenas o responsável geral (**Lucas Carvalho**) tem permissão para cadastrar ou editar membros da equipe.
             </p>
@@ -175,7 +175,7 @@ export default function UsuariosPage() {
                 className="absolute right-3 top-[32px] text-slate-400 hover:text-slate-600 transition-colors"
                 title={showEditPassword ? 'Ocultar Senha' : 'Ver Senha'}
               >
-                {showEditPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showEditPassword ? <Lucide.EyeOff size={16} /> : <Lucide.Eye size={16} />}
               </button>
             </div>
             <p className="text-[10px] text-slate-400 italic">* Se você não digitar nada no campo de senha, a senha atual do funcionário continuará a mesma.</p>
