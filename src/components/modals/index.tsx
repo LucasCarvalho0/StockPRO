@@ -18,14 +18,49 @@ const movSchema = z.object({
 });
 type MovForm = z.infer<typeof movSchema>;
 
-export function MovementModal({ open, onClose, type, preSelectedProductId }: { open: boolean; onClose: () => void; type: MovementType; preSelectedProductId?: string }) {
+export function MovementModal({ 
+  open, 
+  onClose, 
+  type, 
+  preSelectedProductId,
+  preFilledQuantity 
+}: { 
+  open: boolean; 
+  onClose: () => void; 
+  type: MovementType; 
+  preSelectedProductId?: string;
+  preFilledQuantity?: number;
+}) {
   const { data: products = [] } = useProducts();
   const createMovement = useCreateMovement();
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<MovForm>({ resolver: zodResolver(movSchema), defaultValues: { productId: preSelectedProductId ?? '' } });
+  
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<MovForm>({ 
+    resolver: zodResolver(movSchema), 
+    defaultValues: { 
+      productId: preSelectedProductId ?? '',
+      quantidade: preFilledQuantity ?? 0
+    } 
+  });
+
+  // Efeito para resetar os valores quando o produto ou quantidade pré-selecionada mudar
+  useEffect(() => {
+    if (open) {
+      reset({ 
+        productId: preSelectedProductId ?? '', 
+        quantidade: preFilledQuantity ?? 0 
+      });
+    }
+  }, [open, preSelectedProductId, preFilledQuantity, reset]);
 
   const onSubmit = async (data: MovForm) => {
-    try { await createMovement.mutateAsync({ ...data, type }); reset(); onClose(); }
-    catch (err: any) { alert(err?.response?.data?.message ?? 'Erro ao registrar movimentação'); }
+    try { 
+      await createMovement.mutateAsync({ ...data, type }); 
+      reset(); 
+      onClose(); 
+    }
+    catch (err: any) { 
+      alert(err?.response?.data?.message ?? 'Erro ao registrar movimentação'); 
+    }
   };
 
   return (
