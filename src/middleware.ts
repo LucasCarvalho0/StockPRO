@@ -5,30 +5,44 @@ const PUBLIC_PATHS = ['/login', '/api/auth'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const token = request.cookies.get('stockpro_token')?.value;
 
-  // Libera rotas públicas e assets
+  // Libera assets, imagens e favicon
   if (
-    PUBLIC_PATHS.some((p) => pathname.startsWith(p)) ||
     pathname.startsWith('/_next') ||
+    pathname.startsWith('/icons') ||
+    pathname.startsWith('/manifest.json') ||
     pathname.includes('.')
   ) {
     return NextResponse.next();
   }
 
-  // Para rotas de API (exceto auth), verifica o Authorization header
+  // Rotas públicas (estando logado, redireciona para dashboard)
+  if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
+    if (token) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+    return NextResponse.next();
+  }
+
+  // Para rotas de API (exceto auth), apenas verifica se o header existe (a validação real é na rota)
   if (pathname.startsWith('/api/')) {
     const auth = request.headers.get('authorization');
-    if (!auth?.startsWith('Bearer ')) {
+    if (!auth?.startsWith('Bearer ') && !token) {
       return Response.json({ message: 'Não autorizado' }, { status: 401 });
     }
     return NextResponse.next();
   }
 
-  // Para rotas de página, redireciona se não houver token no cookie
-  // (a validação real é feita no getAuthUser de cada API route)
+  // Proteção de rotas de página (Dashboard, etc)
+  if (!token) {
+    const loginUrl = new URL('/login', request.url);
+    return NextResponse.redirect(loginUrl);
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!api/auth|_next/static|_next/image|favicon.ico).*)'],
 };

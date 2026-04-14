@@ -19,7 +19,7 @@ api.interceptors.response.use(
   (err) => {
     if (err.response?.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('stockpro_token');
-      localStorage.removeItem('stockpro_user');
+      localStorage.removeItem('stockpro-auth');
       window.location.href = '/login';
     }
     return Promise.reject(err);
