@@ -24,7 +24,7 @@ export const useAuthStore = create<AuthState>()(
       setAuth: (userData, token) => {
         if (typeof window !== 'undefined') {
           localStorage.setItem('stockpro_token', token);
-          document.cookie = `stockpro_token=${token}; path=/; max-age=86400; SameSite=Lax`;
+          document.cookie = `stockpro_token=${token}; path=/; max-age=604800; SameSite=Lax`;
         }
         const shift = getTurnoAtual();
         set({ 
@@ -37,7 +37,9 @@ export const useAuthStore = create<AuthState>()(
         if (typeof window !== 'undefined') {
           localStorage.removeItem('stockpro_token');
           localStorage.removeItem('stockpro-auth');
+          // Limpeza redundante de cookies para garantir em diferentes paths
           document.cookie = 'stockpro_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'stockpro_token=; path=/dashboard; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
         set({ user: null, token: null, isAuthenticated: false });
       },

@@ -17,11 +17,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Rotas públicas (estando logado, redireciona para dashboard)
+  // Rotas públicas (Login)
   if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
-    if (token) {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
-    }
     return NextResponse.next();
   }
 
