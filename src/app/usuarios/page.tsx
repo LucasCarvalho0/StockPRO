@@ -10,7 +10,7 @@ import { useUsers } from '@/hooks';
 import { usersService } from '@/services';
 import { useQueryClient } from '@tanstack/react-query';
 import { formatDate } from '@/lib/utils';
-import { Plus, ShieldAlert } from 'lucide-react';
+import { Plus, ShieldAlert, Eye, EyeOff } from 'lucide-react';
 import type { User } from '@/types';
 import { useAuthStore } from '@/store/auth.store';
 import { UserModal } from '@/components/modals';
