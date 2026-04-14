@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, notFound, serverError } from '@/lib/auth';
 import PDFDocument from 'pdfkit';

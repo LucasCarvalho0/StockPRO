@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, serverError, hasRole } from '@/lib/auth';
 import { registrarLog } from '@/lib/helpers';
