@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 import { prisma } from './prisma';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'stockpro-secret-2026';
-const JWT_EXPIRES = process.env.JWT_EXPIRES_IN || '8h';
+const JWT_SECRET = process.env.JWT_SECRET || 'stockpro-vpc-super-secret-key-2026';
+const JWT_EXPIRES = process.env.JWT_EXPIRES_IN || '24h';
 
 export interface JwtPayload {
   sub: string;
@@ -27,8 +27,9 @@ export function verifyToken(token: string): JwtPayload | null {
 export function getTokenFromRequest(req: NextRequest): string | null {
   const auth = req.headers.get('authorization');
   if (auth?.startsWith('Bearer ')) return auth.slice(7);
-  const cookie = req.cookies.get('stockpro_token')?.value;
-  return cookie ?? null;
+  
+  const cookieToken = req.cookies.get('stockpro_token')?.value;
+  return cookieToken ?? null;
 }
 
 export async function getAuthUser(req: NextRequest) {
@@ -37,7 +38,10 @@ export async function getAuthUser(req: NextRequest) {
   const payload = verifyToken(token);
   if (!payload) return null;
   const user = await prisma.user.findUnique({ where: { id: payload.sub } });
-  if (!user || !user.ativo) return null;
+  if (!user || !user.ativo) {
+    console.log(`[AUTH] Usuário não encontrado ou inativo: ${payload.sub}`);
+    return null;
+  }
   return user;
 }
 
