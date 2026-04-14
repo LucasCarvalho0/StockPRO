@@ -218,6 +218,11 @@ export function SupplierModal({ open, onClose, supplier }: { open: boolean; onCl
   );
 }
 
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
+
+// ... (existing code)
+
 // ─── User Modal ────────────────────────────────────────────────────────────────
 const userSchema = z.object({
   matricula: z.string().min(1), nome: z.string().min(2),
@@ -228,6 +233,7 @@ type UserForm = z.infer<typeof userSchema>;
 
 export function UserModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const qc = useQueryClient();
+  const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserForm>({ resolver: zodResolver(userSchema), defaultValues: { role: 'ESTOQUISTA' } });
 
   const onSubmit = async (data: UserForm) => {
@@ -249,7 +255,22 @@ export function UserModal({ open, onClose }: { open: boolean; onClose: () => voi
           </div>
           <Input label="Nome Completo" error={errors.nome?.message} {...register('nome')} />
           <Input label="E-mail" type="email" error={errors.email?.message} {...register('email')} />
-          <Input label="Senha inicial" type="password" error={errors.senha?.message} {...register('senha')} />
+          
+          <div className="relative">
+            <Input 
+              label="Senha inicial" 
+              type={showPassword ? 'text' : 'password'} 
+              error={errors.senha?.message} 
+              {...register('senha')} 
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-[32px] text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
         </ModalBody>
         <ModalFooter>
           <Button type="button" variant="secondary" onClick={() => { reset(); onClose(); }}>Cancelar</Button>
