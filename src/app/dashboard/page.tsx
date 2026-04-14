@@ -137,7 +137,7 @@ export default function DashboardPage() {
                  <div className="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
                    <TrendingUp size={16} />
                  </div>
-                 <CardTitle className="text-lg font-bold text-slate-800">Volume de Movimentação Semanal</CardTitle>
+                 <CardTitle className="text-lg font-bold text-slate-800">Movimentação Diária (Últimos 7 Dias)</CardTitle>
                </div>
                <Badge className="bg-blue-600 text-white rounded-lg border-none">Análise Dinâmica</Badge>
             </CardHeader>

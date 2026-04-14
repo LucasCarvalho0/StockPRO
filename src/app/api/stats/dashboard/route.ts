@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, serverError } from '@/lib/auth';
-import { startOfWeek, subWeeks, endOfWeek } from 'date-fns';
+import { subDays, startOfDay, endOfDay } from 'date-fns';
 
 export async function GET(req: NextRequest) {
   headers();
@@ -10,13 +10,14 @@ export async function GET(req: NextRequest) {
     const user = await getAuthUser(req);
     if (!user) return unauthorized();
 
-    // 1. Gráfico Semanal (Últimas 6 semanas)
+    // 1. Gráfico de Movimentação (Últimos 7 Dias)
     const now = new Date();
     const weeklyData = [];
 
-    for (let i = 5; i >= 0; i--) {
-      const start = startOfWeek(subWeeks(now, i));
-      const end = endOfWeek(subWeeks(now, i));
+    for (let i = 6; i >= 0; i--) {
+      const d = subDays(now, i);
+      const start = startOfDay(d);
+      const end = endOfDay(d);
       
       const movements = await prisma.movement.groupBy({
         by: ['type'],
@@ -30,10 +31,11 @@ export async function GET(req: NextRequest) {
       const saidas = movements.find(m => m.type === 'SAIDA')?._sum.quantidade || 0;
 
       weeklyData.push({
-        sem: `S${5 - i + 1}`,
+        day: i,
         entradas,
         saidas,
-        label: `${start.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}`
+        label: d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' })
+          .replace(/^\w/, (c) => c.toUpperCase())
       });
     }
 
