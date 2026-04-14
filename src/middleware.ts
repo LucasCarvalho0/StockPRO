@@ -25,12 +25,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Para rotas de API (exceto auth), apenas verifica se o header existe (a validação real é na rota)
+  // Para rotas de API, permite a passagem (a validação real é feita por getAuthUser em cada rota)
   if (pathname.startsWith('/api/')) {
-    const auth = request.headers.get('authorization');
-    if (!auth?.startsWith('Bearer ') && !token) {
-      return Response.json({ message: 'Não autorizado' }, { status: 401 });
-    }
     return NextResponse.next();
   }
 
