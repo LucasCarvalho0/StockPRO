@@ -57,9 +57,14 @@ export function notFound(message = 'Não encontrado') {
   return Response.json({ message }, { status: 404 });
 }
 
-export function serverError(message = 'Erro interno do servidor') {
-  return Response.json({ message }, { status: 500 });
+export function serverError(message = 'Erro interno do servidor', error?: any) {
+  console.error('[SERVER_ERROR]:', message, error);
+  return Response.json({ 
+    message, 
+    detail: error instanceof Error ? error.message : error 
+  }, { status: 500 });
 }
+
 
 export function hasRole(userRole: string, ...roles: string[]): boolean {
   return roles.includes(userRole);

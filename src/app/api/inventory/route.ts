@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
     });
     return Response.json(inventories);
   } catch (e) {
-    return serverError();
+    return serverError('Erro ao buscar inventários', e);
   }
 }
 
@@ -83,7 +83,6 @@ export async function POST(req: NextRequest) {
 
     return Response.json(inventory, { status: 201 });
   } catch (e) {
-    console.error(e);
-    return serverError();
+    return serverError('Erro ao criar inventário', e);
   }
 }

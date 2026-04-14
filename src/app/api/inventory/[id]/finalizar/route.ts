@@ -16,10 +16,21 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     const items = (rawItems ?? []) as any[];
 
     await prisma.$transaction(async (tx) => {
-      // OTIMIZAÇÃO: Carrega todos os itens do inventário de uma só vez para evitar loops de findFirst
+      // OTIMIZAÇÃO: Carrega todos os dados necessários em lote para evitar centenas de consultas
       const existingItems = await tx.inventoryItem.findMany({
         where: { inventoryId: params.id }
       });
+
+      const productIds = existingItems.map(i => i.productId);
+      
+      // Carrega todos os alertas ativos dos produtos envolvidos de uma só vez
+      const activeAlerts = await tx.alert.findMany({
+        where: { 
+          productId: { in: productIds }, 
+          status: 'ATIVO' 
+        }
+      });
+      const activeAlertsSet = new Set(activeAlerts.map(a => a.productId));
 
       const itemsMap = new Map(existingItems.map(i => [i.productId, i]));
 
@@ -29,7 +40,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         const invItem = itemsMap.get(item.productId);
         if (!invItem) continue;
 
-        const qContada = Math.floor(Number(item.quantidadeContada ?? 0));
+        const parsedQtd = parseInt(item.quantidadeContada || 0);
+        const qContada = isNaN(parsedQtd) ? 0 : parsedQtd;
         const divergencia = qContada - invItem.quantidadeSistema;
         
         await tx.inventoryItem.update({
@@ -42,24 +54,22 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           },
         });
 
-        if (qContada < invItem.quantidadeSistema) {
-          const alertaAtivo = await tx.alert.findFirst({
-            where: { productId: item.productId, status: 'ATIVO' }
+        // Lógica de Alerta otimizada (checa em memória)
+        if (qContada < invItem.quantidadeSistema && !activeAlertsSet.has(item.productId)) {
+          await tx.alert.create({
+            data: {
+              tipo: 'DIVERGENCIA_INVENTARIO',
+              productId: item.productId,
+              quantidadeAtual: qContada,
+              quantidadeMinima: invItem.quantidadeSistema,
+              status: 'ATIVO',
+            },
           });
-
-          if (!alertaAtivo) {
-            await tx.alert.create({
-              data: {
-                tipo: 'DIVERGENCIA_INVENTARIO',
-                productId: item.productId,
-                quantidadeAtual: qContada,
-                quantidadeMinima: invItem.quantidadeSistema,
-                status: 'ATIVO',
-              },
-            });
-          }
+          // Adiciona ao set para evitar duplicados na mesma rodada se necessário
+          activeAlertsSet.add(item.productId);
         }
       }
+
 
       await tx.inventory.update({
         where: { id: params.id },
@@ -81,12 +91,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     });
 
     return Response.json(updated);
-  } catch (e: any) {
-    console.error('[API INVENTORY FINALIZAR ERROR]:', e);
-    return Response.json({ 
-      message: 'Erro interno ao finalizar inventário', 
-      error: e.message || 'Sem mensagem adicional',
-      stack: process.env.NODE_ENV === 'development' ? e.stack : undefined
-    }, { status: 500 });
+  } catch (e) {
+    return serverError('Erro ao finalizar inventário', e);
   }
 }
+

@@ -48,7 +48,10 @@ export const inventoryService = {
     api.patch(`/inventory/${inventoryId}/item/${itemId}`, data).then((r) => r.data),
   finalizar: (id: string, items: any[]) =>
     api.patch<Inventory>(`/inventory/${id}/finalizar`, { items }).then((r) => r.data),
+  sync: (id: string) =>
+    api.patch<{ message: string; added: number }>(`/inventory/${id}/sync`, {}).then((r) => r.data),
 };
+
 
 export const logsService = {
   findAll: (params?: any) => api.get<Log[]>('/logs', { params }).then((r) => r.data),
@@ -98,4 +101,11 @@ export const nfService = {
   }) => api.post<any>('/nf', data).then((r) => r.data),
   baixar: (id: string, items?: { nfItemId: string; quantidadeBaixar: number }[]) =>
     api.patch<any>(`/nf/${id}/baixar`, { items }).then((r) => r.data),
+};
+export const dashboardService = {
+  getStats: () => api.get<{ 
+    weeklyData: { sem: string; entradas: number; saidas: number; label: string }[];
+    distribution: { name: string; value: number }[];
+    health: { total: number; critical: number; ok: number };
+  }>('/stats/dashboard').then((r) => r.data),
 };

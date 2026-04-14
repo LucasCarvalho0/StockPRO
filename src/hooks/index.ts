@@ -2,8 +2,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   productsService, suppliersService, movementsService,
   alertsService, inventoryService, logsService, usersService,
-  clientesService, nfService,
+  clientesService, nfService, dashboardService,
 } from '@/services';
+
 import type { Supplier } from '@/types';
 
 // Products
@@ -83,6 +84,17 @@ export const useFinalizarInventario = () => {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['inventory'] }),
   });
 };
+export const useSyncInventory = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => inventoryService.sync(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['inventory-ativo'] });
+      qc.invalidateQueries({ queryKey: ['inventory'] });
+    },
+  });
+};
+
 export const useAtualizarItemInventario = () => {
   const qc = useQueryClient();
   return useMutation({
@@ -161,3 +173,6 @@ export const useBaixarNF = () => {
     },
   });
 };
+// Dashboard
+export const useDashboardStats = () =>
+  useQuery({ queryKey: ['dashboard-stats'], queryFn: dashboardService.getStats, refetchInterval: 120000 });

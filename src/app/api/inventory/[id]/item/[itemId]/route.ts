@@ -14,20 +14,34 @@ export async function PATCH(
     if (!inventory) return notFound('Inventário não encontrado');
     if (inventory.status !== 'EM_ANDAMENTO') return badRequest('Inventário não está em andamento');
 
-    const { quantidadeContada, observacao } = await req.json();
-
+    const body = await req.json();
+    
     const item = await prisma.inventoryItem.findUnique({ where: { id: params.itemId } });
     if (!item) return notFound('Item não encontrado');
 
+    // Garantir que os valores sejam números válidos e inteiros para o Prisma
+    let quantidadeContada = item.quantidadeContada;
+    if (body.quantidadeContada !== undefined) {
+      const parsed = parseInt(body.quantidadeContada);
+      quantidadeContada = isNaN(parsed) ? 0 : parsed;
+    }
+
+    const observacao = body.observacao !== undefined ? body.observacao : item.observacao;
     const divergencia = quantidadeContada - item.quantidadeSistema;
 
     const updated = await prisma.inventoryItem.update({
       where: { id: params.itemId },
-      data: { quantidadeContada, divergencia, conferido: true, observacao },
+      data: { 
+        quantidadeContada, 
+        divergencia, 
+        conferido: true, 
+        observacao 
+      },
     });
+
 
     return Response.json(updated);
   } catch (e) {
-    return serverError();
+    return serverError('Erro ao atualizar item do inventário', e);
   }
 }

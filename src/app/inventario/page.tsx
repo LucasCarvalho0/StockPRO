@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardHeader, CardTitle, Badge, Button, PageLoading } from '@/components/ui';
 import { InventarioModal } from '@/components/modals';
-import { useInventoryAtivo, useInventoryHistorico, useAtualizarItemInventario, useFinalizarInventario } from '@/hooks';
+import { useInventoryAtivo, useInventoryHistorico, useAtualizarItemInventario, useFinalizarInventario, useSyncInventory } from '@/hooks';
 import { reportsService } from '@/services';
 import { formatDateTime, cn } from '@/lib/utils';
-import { CheckSquare, Square, ClipboardCheck, History, FileDown, Calendar } from 'lucide-react';
+import { CheckSquare, Square, ClipboardCheck, History, FileDown, Calendar, RefreshCw } from 'lucide-react';
 
 export default function InventarioPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -15,8 +15,20 @@ export default function InventarioPage() {
   const { data: historico = [] } = useInventoryHistorico();
   const atualizarItem = useAtualizarItemInventario();
   const finalizar = useFinalizarInventario();
+  const sync = useSyncInventory();
 
   const [lastSelected, setLastSelected] = useState<Record<string, boolean>>({});
+
+  const handleSync = async () => {
+    if (!inventarioAtivo) return;
+    try {
+      const res = await sync.mutateAsync(inventarioAtivo.id);
+      alert(res.message);
+    } catch (err: any) {
+      const detail = err.response?.data?.detail || err.message;
+      alert(`Erro ao sincronizar: ${detail}`);
+    }
+  };
 
   const handleToggleItem = async (itemId: string, checked: boolean, quantidadeSistema: number) => {
     if (!inventarioAtivo) return;
@@ -35,6 +47,25 @@ export default function InventarioPage() {
     });
   };
 
+  const handleUpdateQuantity = async (itemId: string, val: string) => {
+    if (!inventarioAtivo) return;
+    const qtd = parseInt(val) || 0;
+    await atualizarItem.mutateAsync({
+      inventoryId: inventarioAtivo.id,
+      itemId,
+      data: { quantidadeContada: qtd },
+    });
+  };
+
+  const handleUpdateObservacao = async (itemId: string, observacao: string) => {
+    if (!inventarioAtivo) return;
+    await atualizarItem.mutateAsync({
+      inventoryId: inventarioAtivo.id,
+      itemId,
+      data: { observacao },
+    });
+  };
+
   const handleFinalizar = async () => {
     if (!inventarioAtivo) return;
     const itemsConferidos = inventarioAtivo.items.filter((i) => i.conferido);
@@ -46,15 +77,20 @@ export default function InventarioPage() {
 
     if (!confirm(`Confirmar finalização do inventário com ${itemsConferidos.length} de ${inventarioAtivo.items.length} itens verificados?`)) return;
     
-    await finalizar.mutateAsync({
-      id: inventarioAtivo.id,
-      items: itemsConferidos.map((i) => ({
-        productId: i.productId,
-        quantidadeContada: i.quantidadeContada,
-        quantidadeSistema: i.quantidadeSistema,
-        observacao: i.observacao,
-      })),
-    });
+    try {
+      await finalizar.mutateAsync({
+        id: inventarioAtivo.id,
+        items: itemsConferidos.map((i) => ({
+          productId: i.productId,
+          quantidadeContada: i.quantidadeContada,
+          quantidadeSistema: i.quantidadeSistema,
+          observacao: i.observacao,
+        })),
+      });
+    } catch (err: any) {
+      const detail = err.response?.data?.detail || err.message;
+      alert(`Erro ao finalizar: ${detail}`);
+    }
   };
 
   const handlePdfInventario = async (id: string) => {
@@ -134,9 +170,15 @@ export default function InventarioPage() {
                            <div className="h-full bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(96,165,250,0.5)]" style={{ width: `${pct}%` }} />
                         </div>
                      </div>
-                     <Button variant="success" onClick={handleFinalizar} loading={finalizar.isPending} className="w-full md:w-auto h-11 px-8 bg-emerald-500 hover:bg-emerald-600 text-white border-none shadow-lg shadow-emerald-500/20 font-bold tracking-wide">
-                        Finalizar e Consolidar
-                     </Button>
+                     <div className="grid grid-cols-1 sm:flex sm:items-center gap-3 w-full sm:w-auto">
+                        <Button variant="secondary" onClick={handleSync} loading={sync.isPending} className="h-11 px-5 bg-white/10 hover:bg-white/20 text-white border-white/20 shadow-lg backdrop-blur-sm font-medium transition-all hover:scale-[1.02]">
+                           <RefreshCw size={16} className={cn("mr-2", sync.isPending && "animate-spin")} /> Sincronizar Novos Itens
+                        </Button>
+                        <Button variant="success" onClick={handleFinalizar} loading={finalizar.isPending} className="h-11 px-8 bg-emerald-500 hover:bg-emerald-600 text-white border-none shadow-lg shadow-emerald-500/20 font-bold tracking-wide transition-all hover:scale-[1.02] active:scale-95">
+                           <CheckSquare size={18} className="mr-2" /> Finalizar e Consolidar
+                        </Button>
+                     </div>
+
                   </div>
                </div>
             </div>
@@ -185,19 +227,46 @@ export default function InventarioPage() {
                         </span>
                       )}
                     </div>
-                    <div className="text-right min-w-[70px] md:min-w-[90px]">
-                      <p className={cn("text-[13px] md:text-[15px] font-bold font-mono-custom", item.conferido ? 'text-blue-800' : 'text-slate-800')}>
-                        {item.quantidadeSistema} <span className="text-[9px] md:text-[10px] text-slate-400 font-normal uppercase">{item.product.unidade}</span>
-                      </p>
-                      <p className="text-[8px] md:text-[9px] uppercase font-bold text-slate-400 tracking-tighter">Estoque</p>
+                    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 ml-auto">
+                       <div className="flex flex-col items-end">
+                          <label className="text-[9px] uppercase font-bold text-slate-400 tracking-tighter mb-1">Qtd. Contada</label>
+                          <div className="flex items-center gap-2">
+                             <input
+                               type="number"
+                               min="0"
+                               defaultValue={item.quantidadeContada}
+                               onBlur={(e) => handleUpdateQuantity(item.id, e.target.value)}
+                               className={cn(
+                                 "w-20 h-9 rounded-lg border-2 text-center font-bold font-mono-custom focus:ring-2 outline-none transition-all",
+                                 item.conferido 
+                                   ? 'bg-blue-50 border-blue-200 text-blue-900 focus:ring-blue-500/20' 
+                                   : 'bg-white border-slate-200 text-slate-900 focus:ring-blue-500/20 hover:border-blue-300'
+                               )}
+                             />
+                             <span className="text-[10px] text-slate-400 font-bold uppercase">{item.product.unidade}</span>
+                          </div>
+                       </div>
+
+                       <div className="flex flex-col items-end min-w-[120px]">
+                          <label className="text-[9px] uppercase font-bold text-slate-400 tracking-tighter mb-1">Observação</label>
+                          <input
+                            type="text"
+                            placeholder="Adicionar nota..."
+                            defaultValue={item.observacao ?? ''}
+                            onBlur={(e) => handleUpdateObservacao(item.id, e.target.value)}
+                            className="w-full sm:w-48 h-9 px-3 rounded-lg border-2 border-slate-200 bg-white text-[12px] focus:ring-2 focus:ring-blue-500/20 outline-none hover:border-blue-300 transition-all"
+                          />
+                       </div>
+
+                       {item.conferido && (
+                         <div className="flex flex-col items-center min-w-[60px]">
+                            <label className="text-[9px] uppercase font-bold text-slate-400 tracking-tighter mb-1">Diverg.</label>
+                            <Badge variant={item.divergencia < 0 ? 'red' : item.divergencia > 0 ? 'amber' : 'green'} className="rounded-lg font-bold px-3 py-1.5 ring-2 ring-white shadow-sm">
+                              {item.divergencia === 0 ? 'OK' : `${item.divergencia > 0 ? '+' : ''}${item.divergencia}`}
+                            </Badge>
+                         </div>
+                       )}
                     </div>
-                    {item.conferido && (
-                      <div className="min-w-[40px] md:min-w-[80px] flex justify-center">
-                        <Badge variant={item.divergencia < 0 ? 'red' : item.divergencia > 0 ? 'amber' : 'green'} className="rounded-lg font-bold px-2 md:px-3 py-1 ring-2 ring-white">
-                          {item.divergencia === 0 ? 'OK' : `${item.divergencia > 0 ? '+' : ''}${item.divergencia}`}
-                        </Badge>
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
