@@ -4,7 +4,7 @@ import { StatCard, Card, CardHeader, CardTitle, Badge, PageLoading, Button } fro
 import { 
   useProductStats, useAlertsResumo, useResumoHoje, 
   useMovements, useAlerts, useInventoryHistorico, 
-  useSuppliers, useDashboardStats, useInventoryAtivo 
+  useSuppliers, useDashboardStats, useInventoryAtivo, useLogs
 } from '@/hooks';
 import { reportsService } from '@/services';
 import { formatDateTime, cn } from '@/lib/utils';
@@ -12,7 +12,7 @@ import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip, PieChart, Pie, Cell
 import { 
   Package, AlertTriangle, Activity, Calendar, Truck, 
   TrendingUp, History, FileText, FileSpreadsheet, 
-  Users, ChevronRight, CheckCircle2 
+  Users, ChevronRight, CheckCircle2, Clock, ShieldCheck
 } from 'lucide-react';
 
 const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
@@ -27,6 +27,7 @@ export default function DashboardPage() {
   const { data: historico = [] } = useInventoryHistorico();
   const { data: suppliers = [] } = useSuppliers();
   const { data: invAtivo } = useInventoryAtivo();
+  const { data: logs = [] } = useLogs();
 
   const ultimoInv = historico[0];
   const isLoading = statsLoading || dashLoading;
@@ -102,6 +103,11 @@ export default function DashboardPage() {
             accent="#10b981" 
             icon={CheckCircle2}
             valueClass="text-3xl font-bold text-emerald-600"
+            footer={invAtivo ? (
+              <div className="flex items-center gap-1.5 text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full mt-2">
+                <Clock size={10} /> Em andamento
+              </div>
+            ) : undefined}
           />
           <StatCard 
             label="Último Ciclo" 
@@ -274,6 +280,51 @@ export default function DashboardPage() {
             </div>
           </Card>
         </div>
+
+        {/* Linha do Tempo de Atividades Recentes (Auditoria Integrada) */}
+        <Card className="border-none shadow-xl shadow-slate-200/40 rounded-[2.5rem] overflow-hidden bg-white">
+          <CardHeader className="bg-slate-50/50 py-6 px-8 flex flex-row items-center justify-between border-b border-slate-100">
+             <div className="flex items-center gap-3">
+               <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg">
+                 <ShieldCheck size={20} />
+               </div>
+               <div>
+                 <CardTitle className="text-lg font-bold text-slate-800">Pátio de Atividades em Tempo Real</CardTitle>
+                 <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Registros de Auditoria e Operações</p>
+               </div>
+             </div>
+             <Button 
+               variant="outline" 
+               className="rounded-xl border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50"
+               onClick={() => window.location.href = '/auditoria'}
+             >
+               Ver Histórico Completo
+             </Button>
+          </CardHeader>
+          <div className="p-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {logs.slice(0, 6).map((log: any) => (
+                <div key={log.id} className="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-200 transition-all group">
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-indigo-600 shadow-sm group-hover:bg-indigo-600 group-hover:text-white transition-colors flex-shrink-0">
+                    <Clock size={18} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                     <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] font-black text-slate-400 uppercase font-mono-custom">{new Date(log.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
+                        <Badge variant="blue" className="text-[8px] px-2 py-0 border-none rounded-md opacity-60 uppercase">{log.action.replace(/_/g, ' ')}</Badge>
+                     </div>
+                     <p className="text-[12px] font-bold text-slate-700 leading-tight">
+                        {log.user?.nome.split(' ')[0]} <span className="font-normal text-slate-500">{log.descricao}</span>
+                     </p>
+                  </div>
+                </div>
+              ))}
+              {logs.length === 0 && (
+                <div className="col-span-full py-12 text-center text-slate-400 font-medium">Aguardando novas atividades...</div>
+              )}
+            </div>
+          </div>
+        </Card>
       </div>
     </DashboardLayout>
   );

@@ -1,14 +1,14 @@
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getAuthUser, unauthorized, serverError, hasRole } from '@/lib/auth';
+import { getAuthUser, unauthorized, serverError } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   headers();
   try {
     const user = await getAuthUser(req);
     if (!user) return unauthorized();
-    if (!hasRole(user.role, 'LIDER', 'ADMINISTRADOR')) return Response.json({ message: 'Acesso negado' }, { status: 403 });
+    // Acesso de leitura liberado para todos os usuários autenticados
 
     const { searchParams } = req.nextUrl;
     const action = searchParams.get('action') ?? undefined;
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
 
     return Response.json(logs);
   } catch (e) {
-    return serverError();
+    return serverError('Erro ao buscar logs', e);
   }
 }
 

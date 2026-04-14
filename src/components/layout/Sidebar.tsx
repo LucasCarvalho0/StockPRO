@@ -15,7 +15,7 @@ const navItems = [
   { href: '/nf', label: 'NF de Clientes', icon: Lucide.FileDown, section: 'operacoes' },
   { href: '/inventario', label: 'Inventário', icon: Lucide.ClipboardList, section: 'operacoes' },
   { href: '/relatorios', label: 'Relatórios', icon: Lucide.FileText, section: 'operacoes' },
-  { href: '/auditoria', label: 'Auditoria', icon: Lucide.ScrollText, section: 'operacoes', roles: ['LIDER', 'ADMINISTRADOR'] },
+  { href: '/auditoria', label: 'Auditoria', icon: Lucide.ScrollText, section: 'operacoes' },
   { href: '/produtos', label: 'Produtos', icon: Lucide.Boxes, section: 'cadastros' },
   { href: '/clientes', label: 'Clientes', icon: Lucide.Building2, section: 'cadastros' },
   { href: '/fornecedores', label: 'Fornecedores', icon: Lucide.Truck, section: 'cadastros' },

@@ -192,7 +192,9 @@ export default function InventarioPage() {
                 <Badge variant="blue" className="rounded-lg px-4 py-1.5 bg-blue-600 text-white border-none shadow-sm">{conferidos}/{total} VERIFICADOS</Badge>
               </CardHeader>
               <div className="divide-y divide-slate-100 px-2 md:px-4 py-2">
-                {inventarioAtivo.items.map((item) => (
+                {[...inventarioAtivo.items]
+                  .sort((a, b) => a.product.nome.localeCompare(b.product.nome))
+                  .map((item) => (
                   <div
                     key={item.id}
                     className={cn(
