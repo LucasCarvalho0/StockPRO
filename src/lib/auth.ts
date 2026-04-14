@@ -19,7 +19,8 @@ export function signToken(payload: JwtPayload): string {
 export function verifyToken(token: string): JwtPayload | null {
   try {
     return jwt.verify(token, JWT_SECRET) as JwtPayload;
-  } catch {
+  } catch (error: any) {
+    console.error(`[JWT_ERROR] Falha na verificação do token: ${error?.message || 'Erro desconhecido'}`);
     return null;
   }
 }
