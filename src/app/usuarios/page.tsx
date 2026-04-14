@@ -55,23 +55,29 @@ export default function UsuariosPage() {
     setCreateModalOpen(true);
   };
 
-  const { register: regEdit, handleSubmit: handleEdit, reset: resetEdit, formState: { isSubmitting: isEditing } } = useForm<{ email: string }>();
+  const [showEditPassword, setShowEditPassword] = useState(false);
+  const { register: regEdit, handleSubmit: handleEdit, reset: resetEdit, formState: { isSubmitting: isEditing } } = useForm<{ email: string; senha?: string }>();
 
-  const onEditSubmit = async (data: { email: string }) => {
+  const onEditSubmit = async (data: { email: string; senha?: string }) => {
     if (!selectedUser) return;
     try {
-      await usersService.update(selectedUser.id, data);
+      const payload = { ...data };
+      if (!payload.senha) delete payload.senha;
+      
+      await usersService.update(selectedUser.id, payload);
       qc.invalidateQueries({ queryKey: ['users'] });
       setEditModalOpen(false);
       resetEdit();
+      setShowEditPassword(false);
     } catch {
-      alert('Erro ao atualizar e-mail');
+      alert('Erro ao atualizar usuário');
     }
   };
 
   const openEdit = (user: User) => {
     setSelectedUser(user);
-    resetEdit({ email: user.email });
+    resetEdit({ email: user.email, senha: '' });
+    setShowEditPassword(false);
     setEditModalOpen(true);
   };
 
@@ -130,8 +136,8 @@ export default function UsuariosPage() {
                       </td>
                       {isMaster && (
                         <td className="px-5 py-3 flex items-center gap-2">
-                          <Button size="sm" variant="secondary" onClick={() => openEdit(u)}>
-                            Editar E-mail
+                          <Button size="sm" variant="secondary" onClick={() => openEdit(u)} className="text-[11px] font-bold">
+                            Editar Dados
                           </Button>
                         </td>
                       )}
@@ -145,19 +151,38 @@ export default function UsuariosPage() {
       </div>
 
       {/* Modal de Edição de E-mail */}
-      <Modal open={editModalOpen} onClose={() => setEditModalOpen(false)} title="Atualizar E-mail">
+      <Modal open={editModalOpen} onClose={() => setEditModalOpen(false)} title="Editar Usuário / Resetar Senha">
         <form onSubmit={handleEdit(onEditSubmit)}>
           <ModalBody className="flex flex-col gap-4">
             <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-2">
               <p className="text-[11px] text-slate-400 uppercase font-bold tracking-widest mb-1">Usuário selecionado</p>
               <p className="text-[14px] font-bold text-slate-800">{selectedUser?.nome}</p>
-              <p className="text-[11px] text-slate-500 font-mono-custom">Matrícula: {selectedUser?.matricula}</p>
+              <p className="text-[11px] text-slate-500 font-mono-custom">Matrícula: {selectedUser?.matricula} · Perfil: {selectedUser && roleLabels[selectedUser.role]}</p>
             </div>
-            <Input label="Novo E-mail" type="email" placeholder="email@exemplo.com" {...regEdit('email', { required: true })} />
+            
+            <Input label="E-mail" type="email" placeholder="email@exemplo.com" {...regEdit('email', { required: true })} />
+            
+            <div className="relative">
+              <Input 
+                label="Definir Nova Senha (deixe vazio para manter)" 
+                type={showEditPassword ? 'text' : 'password'} 
+                placeholder="Mínimo 6 caracteres"
+                {...regEdit('senha')} 
+              />
+              <button
+                type="button"
+                onClick={() => setShowEditPassword(!showEditPassword)}
+                className="absolute right-3 top-[32px] text-slate-400 hover:text-slate-600 transition-colors"
+                title={showEditPassword ? 'Ocultar Senha' : 'Ver Senha'}
+              >
+                {showEditPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+            <p className="text-[10px] text-slate-400 italic">* Se você não digitar nada no campo de senha, a senha atual do funcionário continuará a mesma.</p>
           </ModalBody>
           <ModalFooter>
             <Button type="button" variant="secondary" onClick={() => setEditModalOpen(false)}>Cancelar</Button>
-            <Button type="submit" variant="primary" loading={isEditing}>Salvar Alteração</Button>
+            <Button type="submit" variant="primary" loading={isEditing}>Salvar Alterações</Button>
           </ModalFooter>
         </form>
       </Modal>
