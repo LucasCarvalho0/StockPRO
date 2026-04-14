@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
@@ -28,3 +27,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return serverError();
   }
 }
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;

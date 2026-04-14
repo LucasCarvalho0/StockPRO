@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, badRequest, notFound, serverError } from '@/lib/auth';
@@ -97,3 +96,5 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 }
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;

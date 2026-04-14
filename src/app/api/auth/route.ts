@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-export const dynamic = 'force-dynamic';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { signToken, badRequest, unauthorized, serverError } from '@/lib/auth';
@@ -52,3 +51,6 @@ export async function POST(req: NextRequest) {
     return serverError('Erro interno no servidor de autenticação');
   }
 }
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;

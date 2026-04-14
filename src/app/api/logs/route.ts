@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, serverError, hasRole } from '@/lib/auth';
@@ -32,3 +31,5 @@ export async function GET(req: NextRequest) {
   }
 }
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;

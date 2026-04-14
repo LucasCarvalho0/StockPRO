@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, badRequest, serverError } from '@/lib/auth';
 import { registrarLog } from '@/lib/helpers';
@@ -87,3 +86,6 @@ export async function POST(req: NextRequest) {
     return serverError('Erro ao criar inventário', e);
   }
 }
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;

@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, serverError } from '@/lib/auth';
 import ExcelJS from 'exceljs';
@@ -88,3 +87,6 @@ export async function GET(req: NextRequest) {
     return serverError();
   }
 }
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;

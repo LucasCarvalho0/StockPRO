@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, serverError } from '@/lib/auth';
 import { startOfWeek, subWeeks, endOfWeek } from 'date-fns';
@@ -82,3 +81,6 @@ export async function GET(req: NextRequest) {
     return serverError('Erro ao gerar estatísticas do dashboard', e);
   }
 }
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
