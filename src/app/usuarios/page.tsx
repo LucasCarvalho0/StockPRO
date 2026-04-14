@@ -13,6 +13,7 @@ import { formatDate } from '@/lib/utils';
 import { Plus, ShieldAlert } from 'lucide-react';
 import type { User } from '@/types';
 import { useAuthStore } from '@/store/auth.store';
+import { UserModal } from '@/components/modals';
 
 const schema = z.object({
   matricula: z.string().min(1, 'Obrigatório'),
