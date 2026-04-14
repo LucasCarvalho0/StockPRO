@@ -96,7 +96,7 @@ export function ModalFooter({ children, className }: { children: React.ReactNode
 }
 
 // StatCard
-export function StatCard({ label, value, sub, accent = '#2563eb', valueClass, icon: Icon }: { label: string; value: string | number; sub?: string; accent?: string; valueClass?: string; icon?: any }) {
+export function StatCard({ label, value, sub, accent = '#2563eb', valueClass, icon: Icon, footer }: { label: string; value: string | number; sub?: string; accent?: string; valueClass?: string; icon?: any; footer?: React.ReactNode }) {
   return (
     <div className="group bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-125" />
@@ -115,6 +115,7 @@ export function StatCard({ label, value, sub, accent = '#2563eb', valueClass, ic
             {sub && <p className="text-[10px] text-slate-400 font-medium">{sub}</p>}
           </div>
         </div>
+        {footer && <div className="mt-4 pt-4 border-t border-slate-50">{footer}</div>}
       </div>
     </div>
   );
