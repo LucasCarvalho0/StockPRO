@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, badRequest, serverError, hasRole } from '@/lib/auth';
@@ -70,3 +71,4 @@ export async function POST(req: NextRequest) {
     return serverError();
   }
 }
+
