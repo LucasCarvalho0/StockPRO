@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as Lucide from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth.store';
 import { useUIStore } from '@/store/ui.store';
 import { useAlertsResumo } from '@/hooks';
 import { getDescricaoTurno } from '@/lib/shifts';
+import { Modal, ModalBody, ModalFooter, Button } from '@/components/ui';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Lucide.LayoutDashboard, section: 'principal' },
@@ -36,11 +37,16 @@ export function Sidebar() {
     setMobileMenuOpen(false);
   }, [pathname, setMobileMenuOpen]);
 
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
   const handleLogout = () => {
-    if (confirm('Deseja realmente sair do sistema?')) {
-      clearAuth();
-      router.push('/login');
-    }
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    clearAuth();
+    router.push('/login');
+    setShowLogoutModal(false);
   };
 
   const grouped = navItems.reduce<Record<string, typeof navItems>>((acc, item) => {
@@ -185,6 +191,42 @@ export function Sidebar() {
         )}
       </div>
     </aside>
+
+    {/* Logout Confirmation Modal Premium */}
+    <Modal 
+      open={showLogoutModal} 
+      onClose={() => setShowLogoutModal(false)} 
+      title="Confirmação de Saída"
+      width="max-w-[400px]"
+    >
+      <ModalBody className="flex flex-col items-center text-center p-10">
+        <div className="w-20 h-20 rounded-[2rem] bg-rose-50 flex items-center justify-center text-rose-600 mb-6 shadow-xl shadow-rose-100 rotate-3 border-2 border-rose-100">
+           <Lucide.LogOut size={36} strokeWidth={2.5} />
+        </div>
+        <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-3">Sair do StockPRO?</h3>
+        <p className="text-[13px] font-semibold text-slate-400 leading-relaxed">
+          Você está prestes a encerrar sua sessão atual. Deseja realmente sair do sistema agora?
+        </p>
+      </ModalBody>
+      <ModalFooter className="grid grid-cols-2 gap-4 px-8 pb-8 pt-0 bg-white border-none">
+        <Button 
+          variant="secondary" 
+          size="lg" 
+          onClick={() => setShowLogoutModal(false)}
+          className="rounded-2xl font-bold"
+        >
+          Cancelar
+        </Button>
+        <Button 
+          variant="premium" 
+          size="lg" 
+          onClick={confirmLogout}
+          className="bg-rose-600 hover:bg-rose-700 shadow-rose-200"
+        >
+          Sim, Sair
+        </Button>
+      </ModalFooter>
+    </Modal>
     </>
   );
 }
