@@ -9,7 +9,11 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   try {
     const user = await getAuthUser(req);
     if (!user) return unauthorized();
-    if (!hasRole(user.role, 'ADMINISTRADOR')) return Response.json({ message: 'Acesso negado' }, { status: 403 });
+    
+    // RESTRIÇÃO: Apenas o Responsável Geral (Lucas Carvalho - 116221) pode editar usuários
+    if (user.matricula !== '116221') {
+      return Response.json({ message: 'Acesso negado: Apenas o responsável geral pode gerenciar funcionários' }, { status: 403 });
+    }
 
     const body = await req.json();
 

@@ -10,8 +10,9 @@ import { useUsers } from '@/hooks';
 import { usersService } from '@/services';
 import { useQueryClient } from '@tanstack/react-query';
 import { formatDate } from '@/lib/utils';
-import { Plus } from 'lucide-react';
+import { Plus, ShieldAlert } from 'lucide-react';
 import type { User } from '@/types';
+import { useAuthStore } from '@/store/auth.store';
 
 const schema = z.object({
   matricula: z.string().min(1, 'Obrigatório'),
@@ -36,13 +37,20 @@ const roleBadge: Record<string, 'gray' | 'blue' | 'red'> = {
 };
 
 export default function UsuariosPage() {
+  const { user: currentUser } = useAuthStore();
+  const isMaster = currentUser?.matricula === '116221';
+
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { data: users = [], isLoading } = useUsers();
   const qc = useQueryClient();
 
   const handleNovoUsuario = () => {
-    alert('🚫 Ação restrita: Para adicionar novos usuários, entre em contato com a equipe de TI (Administrador de Infraestrutura).');
+    if (!isMaster) {
+      alert('🚫 Ação restrita: Apenas o responsável geral (Lucas Carvalho) pode cadastrar novos usuários.');
+      return;
+    }
+    alert('Função de cadastro habilitada para você, Lucas. (TI: Implementar Modal de Criação se necessário)');
   };
 
   const { register: regEdit, handleSubmit: handleEdit, reset: resetEdit, formState: { isSubmitting: isEditing } } = useForm<{ email: string }>();
@@ -72,11 +80,22 @@ export default function UsuariosPage() {
           title="Usuários do Sistema"
           subtitle="Equipe Administrativa e Operacional"
           actions={
-            <Button variant="primary" onClick={handleNovoUsuario}>
-              <Plus size={14} /> Novo Usuário
-            </Button>
+            isMaster && (
+              <Button variant="primary" onClick={handleNovoUsuario}>
+                <Plus size={14} /> Novo Usuário
+              </Button>
+            )
           }
         />
+
+        {!isMaster && (
+          <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl flex items-center gap-3 text-amber-800 shadow-sm">
+            <ShieldAlert size={20} className="text-amber-500 shrink-0" />
+            <p className="text-sm font-medium">
+              Apenas o responsável geral (**Lucas Carvalho**) tem permissão para cadastrar ou editar membros da equipe.
+            </p>
+          </div>
+        )}
 
         <Card>
           <CardHeader>
@@ -89,9 +108,10 @@ export default function UsuariosPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50">
-                    {['Matrícula', 'Nome', 'E-mail', 'Perfil', 'Status', 'Ações'].map((h) => (
+                    {['Matrícula', 'Nome', 'E-mail', 'Perfil', 'Status'].map((h) => (
                       <th key={h} className="text-left px-5 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom">{h}</th>
                     ))}
+                    {isMaster && <th className="text-left px-5 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom">Ações</th>}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
@@ -106,11 +126,13 @@ export default function UsuariosPage() {
                       <td className="px-5 py-3">
                         <Badge variant={u.ativo ? 'green' : 'gray'}>{u.ativo ? 'Ativo' : 'Inativo'}</Badge>
                       </td>
-                      <td className="px-5 py-3 flex items-center gap-2">
-                        <Button size="sm" variant="secondary" onClick={() => openEdit(u)}>
-                          Editar E-mail
-                        </Button>
-                      </td>
+                      {isMaster && (
+                        <td className="px-5 py-3 flex items-center gap-2">
+                          <Button size="sm" variant="secondary" onClick={() => openEdit(u)}>
+                            Editar E-mail
+                          </Button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

@@ -28,7 +28,11 @@ export async function POST(req: NextRequest) {
   try {
     const user = await getAuthUser(req);
     if (!user) return unauthorized();
-    if (!hasRole(user.role, 'ADMINISTRADOR')) return Response.json({ message: 'Acesso negado' }, { status: 403 });
+    
+    // RESTRIÇÃO: Apenas o Responsável Geral (Lucas Carvalho - 116221) pode criar usuários
+    if (user.matricula !== '116221') {
+      return Response.json({ message: 'Acesso negado: Apenas o responsável geral pode cadastrar funcionários' }, { status: 403 });
+    }
 
     const { matricula, nome, email, senha, role } = await req.json();
     if (!matricula || !nome || !email || !senha) return badRequest('Campos obrigatórios: matricula, nome, email, senha');
