@@ -29,6 +29,17 @@ export default function DashboardPage() {
   const { data: invAtivo } = useInventoryAtivo();
   const { data: logs = [] } = useLogs();
 
+  const getDuration = (start: string | Date, end: string | Date | null) => {
+    if (!end) return '-';
+    const s = new Date(start).getTime();
+    const e = new Date(end).getTime();
+    const diff = Math.floor((e - s) / 60000); 
+    if (diff < 60) return `${diff} min`;
+    const h = Math.floor(diff / 60);
+    const m = diff % 60;
+    return `${h}h ${m}m`;
+  };
+
   const ultimoInv = historico[0];
   const isLoading = statsLoading || dashLoading;
 
@@ -42,7 +53,7 @@ export default function DashboardPage() {
            <div>
               <div className="flex items-center gap-3 mb-1">
                 <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200">
-                  <Activity size={20} />
+                   <Activity size={20} />
                 </div>
                 <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard Executivo</h1>
               </div>
@@ -120,7 +131,6 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* Gráfico de Tendências (DINÂMICO) */}
           <Card className="xl:col-span-2 border-none shadow-xl shadow-slate-200/40 rounded-[2.5rem] overflow-hidden bg-white">
             <CardHeader className="bg-slate-50/50 py-6 px-8 flex flex-row items-center justify-between border-b border-slate-100">
                <div className="flex items-center gap-3">
@@ -156,7 +166,6 @@ export default function DashboardPage() {
             </div>
           </Card>
 
-          {/* Distribuição por Cliente (NOVO) */}
           <Card className="border-none shadow-xl shadow-slate-200/40 rounded-[2.5rem] overflow-hidden bg-white">
             <CardHeader className="bg-slate-50/50 py-6 px-8 border-b border-slate-100">
                <div className="flex items-center gap-3">
@@ -200,7 +209,6 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-           {/* Monitor de Tráfego de Mercadorias */}
           <Card className="lg:col-span-2 border-none shadow-xl shadow-slate-200/40 rounded-[2.5rem] overflow-hidden bg-white">
             <CardHeader className="bg-slate-50/50 py-6 px-8 flex flex-row items-center justify-between border-b border-slate-100">
                <div className="flex items-center gap-3">
@@ -246,7 +254,6 @@ export default function DashboardPage() {
             </div>
           </Card>
 
-          {/* Prioridades Críticas */}
           <Card className="border-none shadow-xl shadow-slate-200/40 rounded-[2.5rem] overflow-hidden bg-white">
             <CardHeader className="bg-slate-50/50 py-6 px-8 border-b border-slate-100">
               <div className="flex items-center gap-3">
@@ -302,15 +309,15 @@ export default function DashboardPage() {
              </Button>
           </CardHeader>
           <div className="p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {logs.slice(0, 6).map((log: any) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {logs.slice(0, 12).map((log: any) => (
                 <div key={log.id} className="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-200 transition-all group">
                   <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-indigo-600 shadow-sm group-hover:bg-indigo-600 group-hover:text-white transition-colors flex-shrink-0">
-                    <Clock size={18} />
+                    <Clock size={16} />
                   </div>
                   <div className="flex-1 min-w-0">
                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] font-black text-slate-400 uppercase font-mono-custom">{new Date(log.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span className="text-[10px] font-black text-slate-400 font-mono-custom uppercase">{new Date(log.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
                         <Badge variant="blue" className="text-[8px] px-2 py-0 border-none rounded-md opacity-60 uppercase">{log.action.replace(/_/g, ' ')}</Badge>
                      </div>
                      <p className="text-[12px] font-bold text-slate-700 leading-tight">
@@ -323,6 +330,53 @@ export default function DashboardPage() {
                 <div className="col-span-full py-12 text-center text-slate-400 font-medium">Aguardando novas atividades...</div>
               )}
             </div>
+          </div>
+        </Card>
+
+        {/* Histórico Consolidado de Auditorias (Auditoria Integrada) */}
+        <Card className="border-none shadow-xl shadow-slate-200/40 rounded-[2.5rem] overflow-hidden bg-white mb-8">
+          <CardHeader className="bg-slate-50/50 py-6 px-8 flex flex-row items-center justify-between border-b border-slate-100">
+             <div className="flex items-center gap-3">
+               <div className="w-10 h-10 rounded-2xl bg-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+                 <Calendar size={20} />
+               </div>
+               <div>
+                  <CardTitle className="text-lg font-bold text-slate-800">Relatórios de Auditoria Consolidados</CardTitle>
+                  <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Histórico de fechamentos e duração</p>
+               </div>
+             </div>
+          </CardHeader>
+          <div className="overflow-x-auto">
+             <table className="w-full text-left">
+                <thead><tr className="bg-slate-50/30 border-b border-slate-50">
+                  {['Responsável','Início / Fim','Duração','Volume'].map(h => (
+                    <th key={h} className="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{h}</th>
+                  ))}
+                </tr></thead>
+                <tbody className="divide-y divide-slate-50">
+                  {historico.slice(0, 5).map((inv: any) => (
+                    <tr key={inv.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-8 py-5">
+                         <p className="text-[13px] font-bold text-slate-800">{inv.responsavel}</p>
+                         <p className="text-[10px] text-slate-400 font-bold uppercase">Mat: {inv.matricula}</p>
+                      </td>
+                      <td className="px-8 py-5">
+                         <p className="text-[12px] font-bold text-slate-600">{new Date(inv.iniciadoEm).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</p>
+                         {inv.finalizadoEm && <p className="text-[10px] text-emerald-600 font-bold tracking-tight">Fim: {new Date(inv.finalizadoEm).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>}
+                      </td>
+                      <td className="px-8 py-5">
+                         <Badge variant="blue" className="rounded-lg px-3 py-1 text-[10px] font-bold">{getDuration(inv.iniciadoEm, inv.finalizadoEm)}</Badge>
+                      </td>
+                      <td className="px-8 py-5">
+                         <span className="text-[13px] font-black text-slate-400 font-mono-custom">{inv._count?.items ?? 0} Itens</span>
+                      </td>
+                    </tr>
+                  ))}
+                  {historico.length === 0 && (
+                    <tr><td colSpan={4} className="py-12 text-center text-slate-400 font-medium">Nenhum inventário finalizado recentemente.</td></tr>
+                  )}
+                </tbody>
+             </table>
           </div>
         </Card>
       </div>

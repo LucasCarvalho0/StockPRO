@@ -216,10 +216,10 @@ export default function InventarioPage() {
                       <CheckSquare size={16} className={cn("transition-transform", item.conferido ? 'scale-100' : 'scale-50')} />
                     </button>
                     <div className="flex-1 min-w-0 relative">
-                      <p className={cn("text-[13px] md:text-[15px] font-bold transition-all truncate", item.conferido ? 'text-blue-900 line-through decoration-blue-300 opacity-60' : 'text-slate-900')}>
+                      <p className={cn("text-[13px] md:text-[15px] font-bold transition-all truncate", item.conferido ? 'text-blue-900' : 'text-slate-900')}>
                         {item.product.nome}
                       </p>
-                      <p className={cn("text-[9px] md:text-[10px] font-bold uppercase tracking-widest font-mono-custom truncate", item.conferido ? 'text-blue-400' : 'text-slate-400')}>
+                      <p className={cn("text-[9px] md:text-[10px] font-bold uppercase tracking-widest font-mono-custom truncate", item.conferido ? 'text-blue-500' : 'text-slate-400')}>
                         {item.product.codigo}
                       </p>
 
