@@ -41,6 +41,7 @@ export default function UsuariosPage() {
   const isMaster = currentUser?.matricula === '116221';
 
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { data: users = [], isLoading } = useUsers();
   const qc = useQueryClient();
@@ -50,7 +51,7 @@ export default function UsuariosPage() {
       alert('🚫 Ação restrita: Apenas o responsável geral (Lucas Carvalho) pode cadastrar novos usuários.');
       return;
     }
-    alert('Função de cadastro habilitada para você, Lucas. (TI: Implementar Modal de Criação se necessário)');
+    setCreateModalOpen(true);
   };
 
   const { register: regEdit, handleSubmit: handleEdit, reset: resetEdit, formState: { isSubmitting: isEditing } } = useForm<{ email: string }>();
@@ -159,6 +160,7 @@ export default function UsuariosPage() {
           </ModalFooter>
         </form>
       </Modal>
+      <UserModal open={createModalOpen} onClose={() => setCreateModalOpen(false)} />
     </DashboardLayout>
   );
 }
