@@ -11,7 +11,7 @@ import { AlertCircle, CheckCircle2, History, PackageSearch, ArrowRightCircle } f
 export default function AlertasPage() {
   const { data: alertsAtivos = [], isLoading } = useAlerts('ATIVO');
   const { data: alertsResolvidos = [] } = useAlerts('RESOLVIDO');
-  const { data: resumen } = useAlertsResumo();
+  const { data: resumo } = useAlertsResumo();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [movModal, setMovModal] = useState<{ 
     open: boolean; 
