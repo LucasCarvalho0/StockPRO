@@ -1,9 +1,11 @@
+import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, serverError } from '@/lib/auth';
 import { startOfWeek, subWeeks, endOfWeek } from 'date-fns';
 
 export async function GET(req: NextRequest) {
+  headers();
   try {
     const user = await getAuthUser(req);
     if (!user) return unauthorized();

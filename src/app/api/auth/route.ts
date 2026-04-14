@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
@@ -5,6 +6,7 @@ import { signToken, badRequest, unauthorized, serverError } from '@/lib/auth';
 import { registrarLog } from '@/lib/helpers';
 
 export async function POST(req: NextRequest) {
+  headers();
   try {
     const { matricula, senha } = await req.json();
     console.log(`[AUTH] Tentativa de login: Matrícula ${matricula}`);

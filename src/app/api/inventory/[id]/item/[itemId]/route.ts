@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, notFound, badRequest, serverError } from '@/lib/auth';

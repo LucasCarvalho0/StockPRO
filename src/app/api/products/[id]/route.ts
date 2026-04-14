@@ -1,9 +1,11 @@
+import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, unauthorized, notFound, serverError, hasRole } from '@/lib/auth';
 import { verificarAlerta, registrarLog } from '@/lib/helpers';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+  headers();
   try {
     const user = await getAuthUser(req);
     if (!user) return unauthorized();
