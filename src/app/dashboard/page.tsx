@@ -52,7 +52,7 @@ export default function DashboardPage() {
            
            <div className="flex flex-wrap items-center gap-3">
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 className="rounded-2xl border-slate-200 hover:bg-slate-50 text-slate-600 font-bold gap-2 py-6 px-6"
                 onClick={() => reportsService.excelEstoque().then(b => reportsService.download(b, `estoque-${new Date().toISOString().slice(0,10)}.xlsx`))}
               >
