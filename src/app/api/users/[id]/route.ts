@@ -29,4 +29,3 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 }
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;

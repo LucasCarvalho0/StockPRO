@@ -100,4 +100,3 @@ export async function POST(req: NextRequest) {
 }
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
