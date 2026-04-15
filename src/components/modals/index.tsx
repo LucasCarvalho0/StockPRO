@@ -275,3 +275,123 @@ export function UserModal({ open, onClose }: { open: boolean; onClose: () => voi
     </Modal>
   );
 }
+
+// ─── Movements Detail Modal ───────────────────────────────────────────────────
+export function MovementsDetailModal({ open, onClose, movements }: { 
+  open: boolean; 
+  onClose: () => void; 
+  movements: any[];
+}) {
+  return (
+    <Modal open={open} onClose={onClose} title="Fluxo Logístico — Detalhamento Completo" width="max-w-5xl">
+      <ModalBody className="p-0 overflow-hidden">
+        {/* Header de resumo */}
+        <div className="px-8 py-5 bg-gradient-to-r from-indigo-50 to-violet-50 border-b border-indigo-100 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+              <Lucide.History size={18} strokeWidth={2.5} />
+            </div>
+            <div>
+              <p className="text-[13px] font-black text-slate-900 tracking-tight">Últimas Movimentações</p>
+              <p className="text-[10px] text-indigo-500 font-black uppercase tracking-widest">{movements.length} registros no sistema</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              {movements.filter((m: any) => m.type === 'ENTRADA').length} ENTRADAS
+            </span>
+            <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-rose-700 bg-rose-50 px-3 py-1.5 rounded-full border border-rose-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+              {movements.filter((m: any) => m.type === 'SAIDA').length} SAÍDAS
+            </span>
+          </div>
+        </div>
+
+        {/* Lista de movimentações */}
+        <div className="overflow-y-auto max-h-[65vh] divide-y divide-slate-50">
+          {movements.length === 0 ? (
+            <div className="py-24 text-center">
+              <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <Lucide.PackageOpen size={36} className="text-slate-300" />
+              </div>
+              <p className="font-black text-slate-400 uppercase tracking-widest text-sm">Nenhuma movimentação encontrada</p>
+            </div>
+          ) : (
+            movements.map((m: any) => (
+              <div key={m.id} className="group grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1.5fr] hover:bg-indigo-50/30 transition-all duration-200">
+                {/* Material */}
+                <div className="px-8 py-5 flex items-center gap-4 border-r border-slate-50">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md shrink-0 ${m.type === 'ENTRADA' ? 'bg-emerald-500 shadow-emerald-200' : 'bg-rose-500 shadow-rose-200'}`}>
+                    {m.type === 'ENTRADA'
+                      ? <Lucide.PackagePlus size={16} strokeWidth={2.5} />
+                      : <Lucide.PackageMinus size={16} strokeWidth={2.5} />
+                    }
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[14px] font-black text-slate-900 truncate group-hover:text-indigo-900 transition-colors">{m.product?.nome}</p>
+                    <p className="text-[10px] font-black text-indigo-400 tracking-widest font-mono uppercase mt-0.5">{m.product?.codigo}</p>
+                    {m.observacao ? (
+                      <div className="mt-2 flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                        <Lucide.MessageSquare size={12} className="text-amber-500 mt-0.5 shrink-0" />
+                        <p className="text-[11px] font-semibold text-amber-800 leading-tight break-words">{m.observacao}</p>
+                      </div>
+                    ) : (
+                      <p className="text-[10px] text-slate-300 italic mt-1">Sem observação</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Operação */}
+                <div className="px-6 py-5 flex items-center border-r border-slate-50">
+                  <div className="flex flex-col gap-2">
+                    <span className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl border w-fit ${m.type === 'ENTRADA' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200'}`}>
+                      {m.type === 'ENTRADA' ? <Lucide.ArrowDownLeft size={10} /> : <Lucide.ArrowUpRight size={10} />}
+                      {m.type}
+                    </span>
+                    {m.user && (
+                      <p className="text-[10px] text-slate-400 font-bold flex items-center gap-1">
+                        <Lucide.User size={10} />
+                        {m.user.nome?.split(' ')[0]}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Quantidade */}
+                <div className="px-6 py-5 flex items-center border-r border-slate-50">
+                  <div className="flex flex-col">
+                    <span className={`text-2xl font-black font-mono tracking-tighter ${m.type === 'ENTRADA' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {m.type === 'ENTRADA' ? '+' : '-'}{m.quantidade}
+                    </span>
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{m.product?.unidade}</span>
+                  </div>
+                </div>
+
+                {/* Data/Hora */}
+                <div className="px-6 py-5 flex items-center">
+                  <div className="flex flex-col gap-1">
+                    <p className="text-[13px] font-black text-slate-800">{new Date(m.createdAt).toLocaleDateString('pt-BR')}</p>
+                    <p className="text-[11px] text-slate-400 font-bold flex items-center gap-1">
+                      <Lucide.Clock size={11} />
+                      {new Date(m.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                    {m.notaFiscal && (
+                      <p className="text-[10px] font-black text-indigo-500 tracking-widest flex items-center gap-1 mt-1">
+                        <Lucide.FileText size={10} />
+                        NF: {m.notaFiscal}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </ModalBody>
+      <ModalFooter>
+        <Button type="button" variant="secondary" onClick={onClose}>Fechar</Button>
+      </ModalFooter>
+    </Modal>
+  );
+}

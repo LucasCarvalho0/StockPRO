@@ -8,6 +8,7 @@ import {
 } from '@/hooks';
 import { reportsService } from '@/services';
 import { formatDateTime, cn } from '@/lib/utils';
+import { MovementsDetailModal } from '@/components/modals';
 import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip, PieChart, Pie, Cell, Legend } from 'recharts';
 import { 
   Package, AlertTriangle, Activity, Calendar, Truck, 
@@ -43,9 +44,12 @@ export default function DashboardPage() {
   const ultimoInv = historico[0];
   const isLoading = statsLoading || dashLoading;
 
+  const [isMovementsModalOpen, setIsMovementsModalOpen] = useState(false);
+
   if (isLoading) return <DashboardLayout><div className="p-8"><PageLoading /></div></DashboardLayout>;
 
   return (
+    <>
     <DashboardLayout>
       <div className="p-8 flex flex-col gap-10 fade-in max-w-[1700px] mx-auto min-h-screen bg-slate-50/20">
         
@@ -248,7 +252,7 @@ export default function DashboardPage() {
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Fluxo Logístico Recente</p>
                   </div>
                </div>
-               <Button variant="ghost" size="sm" className="text-indigo-600 font-black gap-2 hover:bg-indigo-50 px-4">
+               <Button variant="ghost" size="sm" className="text-indigo-600 font-black gap-2 hover:bg-indigo-50 px-4" onClick={() => setIsMovementsModalOpen(true)}>
                  EXPLORAR <ChevronRight size={16} />
                </Button>
             </CardHeader>
@@ -428,5 +432,12 @@ export default function DashboardPage() {
         </Card>
       </div>
     </DashboardLayout>
+
+    <MovementsDetailModal
+      open={isMovementsModalOpen}
+      onClose={() => setIsMovementsModalOpen(false)}
+      movements={movements}
+    />
+    </>
   );
 }
