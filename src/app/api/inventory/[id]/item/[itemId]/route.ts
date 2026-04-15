@@ -28,18 +28,22 @@ export async function PATCH(
     }
 
     const observacao = body.observacao !== undefined ? body.observacao : item.observacao;
-    const divergencia = quantidadeContada - item.quantidadeSistema;
+    
+    // Se o body enviar 'conferido', usamos o valor. Caso contrário, assumimos que se houve PATCH é para marcar como conferido (comportamento legado)
+    const conferido = body.conferido !== undefined ? body.conferido : true;
+    
+    // Divergência só faz sentido se o item foi conferido
+    const divergencia = conferido ? (quantidadeContada - item.quantidadeSistema) : 0;
 
     const updated = await prisma.inventoryItem.update({
       where: { id: params.itemId },
       data: { 
         quantidadeContada, 
         divergencia, 
-        conferido: true, 
+        conferido, 
         observacao 
       },
     });
-
 
     return Response.json(updated);
   } catch (e) {

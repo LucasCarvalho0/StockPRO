@@ -43,7 +43,10 @@ export default function InventarioPage() {
     await atualizarItem.mutateAsync({
       inventoryId: inventarioAtivo.id,
       itemId,
-      data: { quantidadeContada: checked ? quantidadeSistema : 0 },
+      data: { 
+        quantidadeContada: checked ? quantidadeSistema : 0,
+        conferido: checked
+      },
     });
   };
 
@@ -234,7 +237,11 @@ export default function InventarioPage() {
               </CardHeader>
               <div className="relative z-10 grid grid-cols-1 gap-4 p-4 md:p-8">
                 {[...inventarioAtivo.items]
-                  .sort((a, b) => a.product.nome.localeCompare(b.product.nome))
+                  .sort((a, b) => {
+                    if (a.conferido && !b.conferido) return -1;
+                    if (!a.conferido && b.conferido) return 1;
+                    return a.product.nome.localeCompare(b.product.nome);
+                  })
                   .map((item) => (
                   <div
                     key={item.id}
