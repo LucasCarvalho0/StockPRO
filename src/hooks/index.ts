@@ -110,15 +110,21 @@ export const useAtualizarItemInventario = () => {
         if (!old) return old;
         return {
           ...old,
-          items: old.items.map((item: any) => 
-            item.id === itemId 
-              ? { 
-                  ...item, 
-                  conferido: data.quantidadeContada > 0 || data.conferido === true,
-                  quantidadeContada: data.quantidadeContada 
-                } 
-              : item
-          )
+          items: old.items.map((item: any) => {
+            if (item.id !== itemId) return item;
+            
+            // Determina o novo estado de conferido
+            let novoConferido = item.conferido;
+            if (data.conferido !== undefined) novoConferido = data.conferido;
+            else if (data.quantidadeContada !== undefined) novoConferido = data.quantidadeContada > 0;
+
+            return { 
+              ...item, 
+              conferido: novoConferido,
+              quantidadeContada: data.quantidadeContada !== undefined ? data.quantidadeContada : item.quantidadeContada,
+              observacao: data.observacao !== undefined ? data.observacao : item.observacao
+            };
+          })
         };
       });
       return { previous };
