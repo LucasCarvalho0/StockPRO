@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { StatCard, Card, CardHeader, CardTitle, Badge, PageLoading, Button } from '@/components/ui';
 import { 
@@ -14,7 +15,7 @@ import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip, PieChart, Pie, Cell
 import { 
   Package, AlertTriangle, Activity, Calendar, Truck, 
   TrendingUp, History, FileText, FileSpreadsheet, 
-  Users, ChevronRight, CheckCircle2, Clock, ShieldCheck
+  Users, ChevronRight, CheckCircle2, Clock, ShieldCheck, DatabaseBackup
 } from 'lucide-react';
 
 const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#f43f5e', '#a855f7', '#06b6d4'];
@@ -74,6 +75,35 @@ export default function DashboardPage() {
            </div>
            
            <div className="flex flex-wrap items-center gap-4 relative z-10">
+              <Button 
+                variant="secondary" 
+                size="lg"
+                className="rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest gap-3 border-dashed border-slate-200 hover:border-indigo-300"
+                onClick={async () => {
+                  try {
+                    toast.loading('Gerando backup...');
+                    const res = await fetch('/api/backup');
+                    if (!res.ok) throw new Error('Sem permissão ou erro no servidor');
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `stockpro-backup-${new Date().toISOString().slice(0,10)}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    toast.dismiss();
+                    toast.success('Backup gerado e baixado com sucesso!');
+                  } catch (e: any) {
+                    toast.dismiss();
+                    toast.error(e.message ?? 'Erro ao gerar backup');
+                  }
+                }}
+              >
+                <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+                  <DatabaseBackup size={16} />
+                </div>
+                Backup
+              </Button>
               <Button 
                 variant="secondary" 
                 size="lg"

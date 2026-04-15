@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardHeader, CardTitle, Badge, Button, PageLoading } from '@/components/ui';
 import { InventarioModal } from '@/components/modals';
@@ -23,10 +24,10 @@ export default function InventarioPage() {
     if (!inventarioAtivo) return;
     try {
       const res = await sync.mutateAsync(inventarioAtivo.id);
-      alert(res.message);
+      toast.success(res.message);
     } catch (err: any) {
       const detail = err.response?.data?.detail || err.message;
-      alert(`Erro ao sincronizar: ${detail}`);
+      toast.error(`Erro ao sincronizar: ${detail}`);
     }
   };
 
@@ -74,40 +75,49 @@ export default function InventarioPage() {
     const itemsConferidos = inventarioAtivo.items.filter((i) => i.conferido);
     
     if (itemsConferidos.length === 0) {
-      alert('Nenhum item foi conferido. Marque pelo menos um produto para finalizar.');
+      toast.warning('Nenhum item foi conferido. Marque pelo menos um produto para finalizar.');
       return;
     }
 
-    if (!confirm(`Confirmar finalização do inventário com ${itemsConferidos.length} de ${inventarioAtivo.items.length} itens verificados?`)) return;
-    
-    try {
-      await finalizar.mutateAsync({
-        id: inventarioAtivo.id,
-        items: itemsConferidos.map((i) => ({
-          productId: i.productId,
-          quantidadeContada: i.quantidadeContada,
-          quantidadeSistema: i.quantidadeSistema,
-          observacao: i.observacao,
-        })),
-      });
-    } catch (err: any) {
-      const detail = err.response?.data?.detail || err.message;
-      alert(`Erro ao finalizar: ${detail}`);
-    }
+    toast(`Confirmar finalização com ${itemsConferidos.length} de ${inventarioAtivo.items.length} itens verificados?`, {
+      action: {
+        label: 'Confirmar',
+        onClick: async () => {
+          try {
+            await finalizar.mutateAsync({
+              id: inventarioAtivo.id,
+              items: itemsConferidos.map((i) => ({
+                productId: i.productId,
+                quantidadeContada: i.quantidadeContada,
+                quantidadeSistema: i.quantidadeSistema,
+                observacao: i.observacao,
+              })),
+            });
+            toast.success('Inventário finalizado com sucesso!');
+          } catch (err: any) {
+            const detail = err.response?.data?.detail || err.message;
+            toast.error(`Erro ao finalizar: ${detail}`);
+          }
+        },
+      },
+      cancel: { label: 'Cancelar', onClick: () => {} },
+    });
   };
 
   const handlePdfInventario = async (id: string) => {
     try {
       const blob = await reportsService.pdfInventario(id);
       reportsService.download(blob, `inventario-${id}.pdf`);
-    } catch { alert('Erro ao gerar PDF'); }
+      toast.success('PDF gerado com sucesso!');
+    } catch { toast.error('Erro ao gerar PDF'); }
   };
 
   const handleExcelInventario = async (id: string) => {
     try {
       const blob = await reportsService.excelInventario(id);
       reportsService.download(blob, `inventario-${id}.xlsx`);
-    } catch { alert('Erro ao gerar Excel'); }
+      toast.success('Excel gerado com sucesso!');
+    } catch { toast.error('Erro ao gerar Excel'); }
   };
 
   const conferidos = inventarioAtivo?.items.filter((i) => i.conferido).length ?? 0;

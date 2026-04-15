@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { toast } from 'sonner';
 import { Modal, ModalBody, ModalFooter, Button, Input, Select, Textarea, InfoBanner } from '@/components/ui';
 import { useCreateMovement, useProducts, useCreateProduct, useUpdateProduct, useSuppliers, useIniciarInventario, useCreateSupplier } from '@/hooks';
 import { suppliersService, usersService } from '@/services';
@@ -55,11 +56,12 @@ export function MovementModal({
   const onSubmit = async (data: MovForm) => {
     try { 
       await createMovement.mutateAsync({ ...data, type }); 
+      toast.success(type === 'ENTRADA' ? 'Entrada registrada com sucesso!' : 'Saída registrada com sucesso!');
       reset(); 
       onClose(); 
     }
     catch (err: any) { 
-      alert(err?.response?.data?.message ?? 'Erro ao registrar movimentação'); 
+      toast.error(err?.response?.data?.message ?? 'Erro ao registrar movimentação'); 
     }
   };
 
@@ -108,8 +110,9 @@ export function ProductModal({ open, onClose, product }: { open: boolean; onClos
     try {
       if (isEdit) await updateProduct.mutateAsync({ id: product!.id, data });
       else await createProduct.mutateAsync(data);
+      toast.success(isEdit ? 'Produto atualizado!' : 'Produto cadastrado!');
       onClose();
-    } catch (err: any) { alert(err?.response?.data?.message ?? 'Erro ao salvar'); }
+    } catch (err: any) { toast.error(err?.response?.data?.message ?? 'Erro ao salvar'); }
   };
 
   return (
@@ -149,8 +152,8 @@ export function InventarioModal({ open, onClose, onSuccess }: { open: boolean; o
   const { register, handleSubmit, reset, formState: { errors } } = useForm<InvForm>({ resolver: zodResolver(invSchema) });
 
   const onSubmit = async (data: InvForm) => {
-    try { await iniciar.mutateAsync(data); reset(); onSuccess(); }
-    catch (err: any) { alert(err?.response?.data?.message ?? 'Erro ao iniciar inventário'); }
+    try { await iniciar.mutateAsync(data); toast.success('Inventário iniciado com sucesso!'); reset(); onSuccess(); }
+    catch (err: any) { toast.error(err?.response?.data?.message ?? 'Erro ao iniciar inventário'); }
   };
 
   return (
@@ -193,8 +196,9 @@ export function SupplierModal({ open, onClose, supplier }: { open: boolean; onCl
     try {
       if (isEdit) { await suppliersService.update(supplier!.id, data); qc.invalidateQueries({ queryKey: ['suppliers'] }); }
       else await createSupplier.mutateAsync(data);
+      toast.success(isEdit ? 'Fornecedor atualizado!' : 'Fornecedor cadastrado!');
       onClose();
-    } catch (err: any) { alert(err?.response?.data?.message ?? 'Erro ao salvar fornecedor'); }
+    } catch (err: any) { toast.error(err?.response?.data?.message ?? 'Erro ao salvar fornecedor'); }
   };
 
   return (
@@ -232,8 +236,8 @@ export function UserModal({ open, onClose }: { open: boolean; onClose: () => voi
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserForm>({ resolver: zodResolver(userSchema), defaultValues: { role: 'ESTOQUISTA' } });
 
   const onSubmit = async (data: UserForm) => {
-    try { await usersService.create(data); qc.invalidateQueries({ queryKey: ['users'] }); reset(); onClose(); }
-    catch (err: any) { alert(err?.response?.data?.message ?? 'Erro ao criar usuário'); }
+    try { await usersService.create(data); qc.invalidateQueries({ queryKey: ['users'] }); toast.success('Usuário criado com sucesso!'); reset(); onClose(); }
+    catch (err: any) { toast.error(err?.response?.data?.message ?? 'Erro ao criar usuário'); }
   };
 
   return (
