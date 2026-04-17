@@ -176,7 +176,7 @@ export function NgTransferModal({ open, onClose, product }: { open: boolean; onC
         </ModalBody>
         <ModalFooter>
           <Button type="button" variant="secondary" onClick={() => { reset(); onClose(); }}>Cancelar</Button>
-          <Button type="submit" variant="danger" loading={transferToNG.isPending} className="bg-red-600 hover:bg-red-700 font-bold border-red-700">Confirmar Baixa</Button>
+          <Button type="submit" variant="danger" loading={transferToNG.isPending} className="bg-red-600 hover:bg-red-700 font-bold border-red-700 text-white">Confirmar Baixa</Button>
         </ModalFooter>
       </form>
     </Modal>
