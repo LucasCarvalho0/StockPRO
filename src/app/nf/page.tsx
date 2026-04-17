@@ -136,7 +136,7 @@ export default function NfPage() {
               </select>
             </div>
 
-            <div className="flex items-center gap-2 px-4 py-3 bg-white/50 border border-slate-200 rounded-2xl group focus-within:border-blue-500 transition-all w-full md:max-w-md">
+            <div className="flex items-center gap-2 px-4 py-3 bg-white/50 border border-slate-200 rounded-2xl group focus-within:border-blue-500 transition-all w-full md:flex-1">
               <Search size={16} className="text-slate-400" />
               <select
                 className="bg-transparent outline-none text-sm text-slate-600 font-bold w-full cursor-pointer"

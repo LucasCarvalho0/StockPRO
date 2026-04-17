@@ -36,8 +36,8 @@ export function Topbar() {
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-4">
-        <span className="text-[11px] font-mono-custom" style={{ color: 'rgba(255,255,255,0.35)' }}>{formatDate(new Date())}</span>
+      <div className="flex items-center gap-2 md:gap-4">
+        <span className="hidden sm:block text-[11px] font-mono-custom" style={{ color: 'rgba(255,255,255,0.35)' }}>{formatDate(new Date())}</span>
         {resumo && resumo.ativos > 0 && (
           <div className="relative">
             <Lucide.Bell size={16} className="text-white/50" />
@@ -56,7 +56,8 @@ export function Topbar() {
             style={{ background: '#1a3460', border: '1px solid rgba(255,255,255,0.15)' }}>
             {user?.nome?.substring(0, 2).toUpperCase()}
           </div>
-          <span className="hidden sm:block">{user?.nome}</span>
+          <span className="hidden lg:block">{user?.nome}</span>
+          <span className="hidden sm:block lg:hidden">{user?.nome?.split(' ')[0]}</span>
         </div>
       </div>
     </header>

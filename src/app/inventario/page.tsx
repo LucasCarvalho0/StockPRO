@@ -177,7 +177,7 @@ export default function InventarioPage() {
                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full -mr-32 -mt-32 blur-[100px] transition-all duration-1000 group-hover:bg-indigo-500/20" />
                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-500/5 rounded-full -ml-32 -mb-32 blur-[100px]" />
                
-               <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-12 relative z-10">
+               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12 relative z-10">
                   <div className="flex items-start gap-6 flex-1">
                      <div className="w-20 h-20 rounded-[2rem] bg-indigo-600 flex items-center justify-center text-white shadow-[0_0_30px_rgba(79,70,229,0.5)] animate-pulse ring-4 ring-indigo-500/20">
                         <Activity size={32} strokeWidth={2.5} />
@@ -204,7 +204,7 @@ export default function InventarioPage() {
                      </div>
                   </div>
 
-                  <div className="flex flex-col items-end gap-6 min-w-[320px] w-full xl:w-auto bg-white/5 p-8 rounded-[2.5rem] backdrop-blur-md border border-white/5">
+                  <div className="flex flex-col items-end gap-6 lg:min-w-[320px] w-full lg:w-auto bg-white/5 p-8 rounded-[2.5rem] backdrop-blur-md border border-white/5">
                      <div className="w-full">
                         <div className="flex justify-between items-end mb-3">
                            <div>

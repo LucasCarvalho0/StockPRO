@@ -120,11 +120,11 @@ export default function EstoquePage() {
 
               {showOnlyNG && (
                 <Button 
-                  variant="danger" 
+                  variant="secondary" 
                   size="sm" 
                   onClick={handleExportNG} 
                   loading={loadingExport}
-                  className="bg-red-600 hover:bg-red-700 font-bold text-white flex items-center"
+                  className="bg-white hover:bg-red-50 font-bold text-red-600 border-red-200 shadow-sm flex items-center"
                 >
                   <Download size={14} className="mr-1.5" /> Exportar Excel NG
                 </Button>
@@ -173,7 +173,7 @@ export default function EstoquePage() {
                         <div className="flex items-center gap-1">
                           <Button size="sm" variant="success" onClick={() => setMovModal({ open: true, type: 'ENTRADA', productId: p.id })}>+</Button>
                           <Button size="sm" variant="danger" onClick={() => setMovModal({ open: true, type: 'SAIDA', productId: p.id })}>−</Button>
-                          <Button size="sm" variant="danger" className="bg-red-700 hover:bg-red-800 border-red-800" onClick={() => setNgModal({ open: true, product: p })}>🔥 NG</Button>
+                          <Button size="sm" variant="secondary" className="bg-white hover:bg-red-50 border-red-200 text-red-600 font-bold shadow-sm" onClick={() => setNgModal({ open: true, product: p })}>🔥 NG</Button>
                           <Button size="sm" variant="secondary" onClick={() => setProdModal({ open: true, product: p })}>Ed.</Button>
                         </div>
                       </td>

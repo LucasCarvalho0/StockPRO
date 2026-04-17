@@ -29,13 +29,24 @@ export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, clearAuth } = useAuthStore();
-  const { isSidebarCollapsed, toggleSidebar, isMobileMenuOpen, setMobileMenuOpen } = useUIStore();
+  const { isSidebarCollapsed, toggleSidebar, setSidebarCollapsed, isMobileMenuOpen, setMobileMenuOpen } = useUIStore();
   const { data: resumo } = useAlertsResumo();
 
-  // Fecha o menu mobile ao trocar de rota
+  // Fecha o menu mobile ao trocar de rota e gerencia colapso automático
   useEffect(() => {
     setMobileMenuOpen(false);
-  }, [pathname, setMobileMenuOpen]);
+    
+    // Auto collapse em telas menores que 1280px (notebooks de 13/15 pol e tablets)
+    const handleResize = () => {
+      if (window.innerWidth < 1280 && !isSidebarCollapsed) {
+        setSidebarCollapsed(true);
+      }
+    };
+
+    handleResize(); // Executa ao montar
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [pathname, setMobileMenuOpen, isSidebarCollapsed, setSidebarCollapsed]);
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 

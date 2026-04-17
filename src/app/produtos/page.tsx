@@ -127,13 +127,13 @@ export default function ProdutosPage() {
 
         {/* Content Section */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
               <div key={i} className="h-64 bg-white/30 rounded-3xl animate-pulse border border-white/50 shadow-sm" />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filtered.map((p) => {
               const status = p.quantidade === 0 ? 'critico' : p.quantidade <= p.quantidadeMinima ? 'alerta' : 'ok';
               return (
@@ -174,15 +174,21 @@ export default function ProdutosPage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 mt-auto mb-6">
-                    <div className="bg-slate-50/80 rounded-2xl p-3 border border-slate-100 transition-colors group-hover:bg-white">
-                      <p className="text-[9px] uppercase font-bold text-slate-400 tracking-tighter mb-1">Qtd Atual</p>
-                      <p className={cn(
-                        "text-2xl font-black font-mono-custom",
-                        status === 'critico' ? 'text-rose-600' : status === 'alerta' ? 'text-amber-600' : 'text-slate-900'
-                      )}>
-                        {p.quantidade}<span className="text-[11px] font-bold text-slate-400 ml-1 uppercase">{p.unidade}</span>
-                      </p>
-                      {p.quantidadeNG > 0 && <span className="text-[10px] text-red-500 font-bold bg-red-50 px-2 py-0.5 rounded-full mt-1 inline-block">NG: {p.quantidadeNG}</span>}
+                    <div className="bg-slate-50/80 rounded-2xl p-3 border border-slate-100 transition-colors group-hover:bg-white flex flex-col justify-between">
+                      <div>
+                        <p className="text-[9px] uppercase font-bold text-slate-400 tracking-tighter mb-1">Qtd Atual</p>
+                        <p className={cn(
+                          "text-2xl font-black font-mono-custom",
+                          status === 'critico' ? 'text-rose-600' : status === 'alerta' ? 'text-amber-600' : 'text-slate-900'
+                        )}>
+                          {p.quantidade}<span className="text-[11px] font-bold text-slate-400 ml-1 uppercase">{p.unidade}</span>
+                        </p>
+                      </div>
+                      {p.quantidadeNG > 0 && (
+                        <span className="text-[10px] text-red-600 font-bold bg-white border border-red-100 px-2.5 py-1 rounded-full mt-2 inline-block shadow-sm text-center">
+                          NG: {p.quantidadeNG}
+                        </span>
+                      )}
                     </div>
                     <div className="bg-slate-50/80 rounded-2xl p-3 border border-slate-100 transition-colors group-hover:bg-white">
                       <p className="text-[9px] uppercase font-bold text-slate-400 tracking-tighter mb-1">Mínimo</p>
@@ -272,4 +278,3 @@ export default function ProdutosPage() {
     </DashboardLayout>
   );
 }
-

@@ -129,7 +129,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Grade de Métricas Premium: 5 Colunas */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
           <StatCard 
             label="Volume em Estoque" 
             value={stats?.total ?? 0} 
@@ -177,8 +177,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Centro Analítico */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-          <Card className="xl:col-span-2 group">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <Card className="md:col-span-2 group">
             <CardHeader className="flex flex-row items-center justify-between">
                <div className="flex items-center gap-4">
                  <div className="w-12 h-12 rounded-[1rem] bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-sm">
@@ -271,8 +271,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Atividades e Alertas */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <Card className="lg:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <Card className="md:col-span-2 group">
             <CardHeader className="flex flex-row items-center justify-between">
                <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-[1rem] bg-indigo-50 flex items-center justify-center text-indigo-600">
