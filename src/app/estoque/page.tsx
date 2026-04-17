@@ -74,7 +74,7 @@ export default function EstoquePage() {
         />
 
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 p-6">
             <div className="flex items-center gap-2 flex-wrap">
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -130,7 +130,7 @@ export default function EstoquePage() {
                 </Button>
               )}
             </div>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center flex-wrap justify-between md:justify-end w-full lg:w-auto">
               {showOnlyNG && (
                 <Badge variant="red" className="font-bold border-red-200">Total NG: {totalNG} peças</Badge>
               )}
