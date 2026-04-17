@@ -130,6 +130,7 @@ model Product {
   unidade          String   @default("un")
   quantidade       Int      @default(0)
   quantidadeMinima Int      @default(0)
+  quantidadeNG     Int      @default(0)
   supplierId       String?
   clienteId        String?
   ativo            Boolean  @default(true)

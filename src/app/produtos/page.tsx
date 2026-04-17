@@ -21,6 +21,7 @@ const schema = z.object({
   descricao: z.string().optional(),
   unidade: z.string().min(1, 'Unidade é obrigatória'),
   quantidade: z.coerce.number().min(0, 'Mínimo 0'),
+  quantidadeNG: z.coerce.number().min(0).default(0),
   quantidadeMinima: z.coerce.number().min(0, 'Mínimo 0'),
   clienteId: z.string().optional(),
   supplierId: z.string().optional(),
@@ -50,14 +51,14 @@ export default function ProdutosPage() {
     reset({
       codigo: p.codigo, nome: p.nome, modelo: (p as any).modelo ?? '-',
       descricao: p.descricao ?? '', unidade: p.unidade,
-      quantidade: p.quantidade, quantidadeMinima: p.quantidadeMinima,
+      quantidade: p.quantidade, quantidadeNG: p.quantidadeNG ?? 0, quantidadeMinima: p.quantidadeMinima,
       clienteId: p.clienteId ?? '', supplierId: p.supplierId ?? '',
     });
     setModal({ open: true, product: p });
   };
 
   const openCreate = () => {
-    reset({ codigo: '', nome: '', modelo: '-', descricao: '', unidade: 'un', quantidade: 0, quantidadeMinima: 0, clienteId: '', supplierId: '' });
+    reset({ codigo: '', nome: '', modelo: '-', descricao: '', unidade: 'un', quantidade: 0, quantidadeNG: 0, quantidadeMinima: 0, clienteId: '', supplierId: '' });
     setModal({ open: true });
   };
 
@@ -183,6 +184,7 @@ export default function ProdutosPage() {
                       )}>
                         {p.quantidade}<span className="text-[11px] font-bold text-slate-400 ml-1 uppercase">{p.unidade}</span>
                       </p>
+                      {p.quantidadeNG > 0 && <span className="text-[10px] text-red-500 font-bold bg-red-50 px-2 py-0.5 rounded-full mt-1 inline-block">NG: {p.quantidadeNG}</span>}
                     </div>
                     <div className="bg-slate-50/80 rounded-2xl p-3 border border-slate-100 transition-colors group-hover:bg-white">
                       <p className="text-[9px] uppercase font-bold text-slate-400 tracking-tighter mb-1">Mínimo</p>
@@ -240,9 +242,10 @@ export default function ProdutosPage() {
             <Input label="Nome Descritivo" placeholder="Nome comercial do produto" error={errors.nome?.message} {...register('nome')} />
             <Input label="Modelo / Referência" placeholder="Ex: Kicks, Frontier, Componente X" {...register('modelo')} />
             <Textarea label="Descrição Detalhada (opcional)" rows={3} placeholder="Notas técnicas ou observações..." {...register('descricao')} />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <Input label="Qtd em Estoque" type="number" min={0} {...register('quantidade')} />
-              <Input label="Estoque de Segurança (Mínimo)" type="number" min={0} {...register('quantidadeMinima')} />
+              <Input label="Qtd NG (Sucata)" type="number" min={0} {...register('quantidadeNG')} />
+              <Input label="Estoque Segurança" type="number" min={0} {...register('quantidadeMinima')} />
             </div>
             
             <div className="space-y-4 pt-2">

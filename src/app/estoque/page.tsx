@@ -97,7 +97,7 @@ export default function EstoquePage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50">
-                    {['Código', 'Produto', 'Modelo', 'Cliente', 'Quantidade', 'Mín.', 'Status', 'Ações'].map((h) => (
+                    {['Código', 'Produto', 'Modelo', 'Cliente', 'Quantidade', 'Qtd. NG', 'Mín.', 'Status', 'Ações'].map((h) => (
                       <th key={h} className="text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
@@ -118,12 +118,14 @@ export default function EstoquePage() {
                       <td className="px-4 py-3 w-36">
                         <QtyBar value={p.quantidade} min={p.quantidadeMinima} max={Math.max(p.quantidade, p.quantidadeMinima || 1) * 2} />
                       </td>
+                      <td className="px-4 py-3 text-[12px] font-mono-custom text-red-500 font-bold">{p.quantidadeNG > 0 ? p.quantidadeNG : '-'}</td>
                       <td className="px-4 py-3 text-[12px] text-slate-400 font-mono-custom">{p.quantidadeMinima}</td>
                       <td className="px-4 py-3">{getStatusBadge(p)}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
                           <Button size="sm" variant="success" onClick={() => setMovModal({ open: true, type: 'ENTRADA', productId: p.id })}>+</Button>
                           <Button size="sm" variant="danger" onClick={() => setMovModal({ open: true, type: 'SAIDA', productId: p.id })}>−</Button>
+                          {/* <Button size="sm" variant="danger" className="bg-red-700 hover:bg-red-800" onClick={() => handleNG...}>NG</Button> */}
                           <Button size="sm" variant="secondary" onClick={() => setProdModal({ open: true, product: p })}>Ed.</Button>
                         </div>
                       </td>

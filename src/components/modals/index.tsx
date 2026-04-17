@@ -89,7 +89,7 @@ export function MovementModal({
 // ─── Product Modal ─────────────────────────────────────────────────────────────
 const prodSchema = z.object({
   codigo: z.string().min(1), nome: z.string().min(1), descricao: z.string().optional(),
-  unidade: z.string().min(1), quantidade: z.coerce.number().min(0),
+  unidade: z.string().min(1), quantidade: z.coerce.number().min(0), quantidadeNG: z.coerce.number().min(0).default(0),
   quantidadeMinima: z.coerce.number().min(0), supplierId: z.string().min(1, 'Selecione fornecedor'),
 });
 type ProdForm = z.infer<typeof prodSchema>;
@@ -102,8 +102,8 @@ export function ProductModal({ open, onClose, product }: { open: boolean; onClos
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ProdForm>({ resolver: zodResolver(prodSchema) });
 
   useEffect(() => {
-    if (product) reset({ codigo: product.codigo, nome: product.nome, descricao: product.descricao ?? '', unidade: product.unidade, quantidade: product.quantidade, quantidadeMinima: product.quantidadeMinima, supplierId: product.supplierId });
-    else reset({ codigo: '', nome: '', descricao: '', unidade: 'un', quantidade: 0, quantidadeMinima: 0, supplierId: '' });
+    if (product) reset({ codigo: product.codigo, nome: product.nome, descricao: product.descricao ?? '', unidade: product.unidade, quantidade: product.quantidade, quantidadeNG: product.quantidadeNG ?? 0, quantidadeMinima: product.quantidadeMinima, supplierId: product.supplierId });
+    else reset({ codigo: '', nome: '', descricao: '', unidade: 'un', quantidade: 0, quantidadeNG: 0, quantidadeMinima: 0, supplierId: '' });
   }, [product, open]);
 
   const onSubmit = async (data: ProdForm) => {
@@ -125,8 +125,9 @@ export function ProductModal({ open, onClose, product }: { open: boolean; onClos
           </div>
           <Input label="Nome do Produto" error={errors.nome?.message} {...register('nome')} />
           <Textarea label="Descrição (opcional)" rows={2} {...register('descricao')} />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <Input label="Quantidade" type="number" min={0} error={errors.quantidade?.message} {...register('quantidade')} />
+            <Input label="Qtd NG (Sucata)" type="number" min={0} error={errors.quantidadeNG?.message} {...register('quantidadeNG')} />
             <Input label="Qtd Mínima" type="number" min={0} error={errors.quantidadeMinima?.message} {...register('quantidadeMinima')} />
           </div>
           <Select label="Fornecedor" error={errors.supplierId?.message} {...register('supplierId')}>

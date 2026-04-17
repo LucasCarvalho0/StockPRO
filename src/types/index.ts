@@ -17,7 +17,7 @@ export interface Supplier {
 
 export interface Product {
   id: string; codigo: string; nome: string; modelo?: string; descricao?: string;
-  unidade: string; quantidade: number; quantidadeMinima: number;
+  unidade: string; quantidade: number; quantidadeMinima: number; quantidadeNG: number;
   supplierId?: string; supplier?: { id: string; nome: string };
   clienteId?: string; cliente?: { id: string; nome: string };
   ativo: boolean; alerts?: Alert[]; createdAt: string; updatedAt: string;

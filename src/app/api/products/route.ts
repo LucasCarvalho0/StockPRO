@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
       return Response.json({ message: 'Acesso negado' }, { status: 403 });
 
     const body = await req.json();
-    const { codigo, nome, modelo, descricao, unidade, quantidade, quantidadeMinima, supplierId, clienteId } = body;
+    const { codigo, nome, modelo, descricao, unidade, quantidade, quantidadeNG, quantidadeMinima, supplierId, clienteId } = body;
 
     if (!codigo || !nome) return badRequest('Campos obrigatórios: codigo, nome');
 
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     if (existing) return Response.json({ message: 'Código já cadastrado' }, { status: 409 });
 
     const product = await prisma.product.create({
-      data: { codigo, nome, modelo: modelo ?? '-', descricao, unidade: unidade ?? 'un', quantidade: quantidade ?? 0, quantidadeMinima: quantidadeMinima ?? 0, supplierId, clienteId },
+      data: { codigo, nome, modelo: modelo ?? '-', descricao, unidade: unidade ?? 'un', quantidade: parseInt(quantidade) || 0, quantidadeNG: parseInt(quantidadeNG) || 0, quantidadeMinima: parseInt(quantidadeMinima) || 0, supplierId, clienteId },
       include: {
         supplier: { select: { id: true, nome: true } },
         cliente: { select: { id: true, nome: true } },
