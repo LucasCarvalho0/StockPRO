@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { Modal, ModalBody, ModalFooter, Button, Input, Select, Textarea, InfoBanner } from '@/components/ui';
-import { useCreateMovement, useProducts, useCreateProduct, useUpdateProduct, useSuppliers, useIniciarInventario, useCreateSupplier } from '@/hooks';
+import { useCreateMovement, useProducts, useCreateProduct, useUpdateProduct, useSuppliers, useIniciarInventario, useCreateSupplier, useTransferToNG } from '@/hooks';
 import { suppliersService, usersService } from '@/services';
 import { useQueryClient } from '@tanstack/react-query';
 import * as Lucide from 'lucide-react';
@@ -138,6 +138,45 @@ export function ProductModal({ open, onClose, product }: { open: boolean; onClos
         <ModalFooter>
           <Button type="button" variant="secondary" onClick={onClose}>Cancelar</Button>
           <Button type="submit" variant="primary" loading={createProduct.isPending || updateProduct.isPending}>{isEdit ? 'Salvar' : 'Cadastrar'}</Button>
+        </ModalFooter>
+      </form>
+    </Modal>
+  );
+}
+
+// ─── NG Transfer Modal ─────────────────────────────────────────────────────────
+const ngSchema = z.object({
+  quantidade: z.coerce.number().min(1, 'Mínimo de 1 peça'),
+  observacao: z.string().optional(),
+});
+type NgForm = z.infer<typeof ngSchema>;
+
+export function NgTransferModal({ open, onClose, product }: { open: boolean; onClose: () => void; product?: Product }) {
+  const transferToNG = useTransferToNG();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<NgForm>({ resolver: zodResolver(ngSchema) });
+
+  useEffect(() => { if (open) reset({ quantidade: 0, observacao: '' }); }, [open, reset]);
+
+  const onSubmit = async (data: NgForm) => {
+    try {
+      if (!product) return;
+      await transferToNG.mutateAsync({ id: product.id, ...data });
+      toast.success('Sucata (NG) registrada com sucesso!');
+      onClose();
+    } catch (err: any) { toast.error(err?.response?.data?.message ?? 'Erro ao transferir para sucata'); }
+  };
+
+  return (
+    <Modal open={open} onClose={onClose} title="Baixa para Sucata (NG)">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <ModalBody className="flex flex-col gap-4">
+          <InfoBanner type="warning">Você está movendo estoque Bom de {product?.nome} para o estoque de Sucata (Avarias).</InfoBanner>
+          <Input label="Quantidade Avariada" type="number" min={1} max={product?.quantidade} error={errors.quantidade?.message} {...register('quantidade')} />
+          <Textarea label="Motivo / Observação (Recomendado)" rows={2} {...register('observacao')} placeholder="Descreva o motivo da baixa..." />
+        </ModalBody>
+        <ModalFooter>
+          <Button type="button" variant="secondary" onClick={() => { reset(); onClose(); }}>Cancelar</Button>
+          <Button type="submit" variant="danger" loading={transferToNG.isPending} className="bg-red-600 hover:bg-red-700 font-bold border-red-700">Confirmar Baixa</Button>
         </ModalFooter>
       </form>
     </Modal>

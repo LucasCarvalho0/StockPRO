@@ -40,6 +40,30 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       return Response.json({ message: 'Produto desativado' });
     }
 
+    if (body._action === 'transfer_ng') {
+      const { quantidade, observacao } = body;
+      const current = await prisma.product.findUnique({ where: { id: params.id } });
+      if (!current || current.quantidade < quantidade) {
+        return Response.json({ message: 'Estoque limpo insuficiente para transferência' }, { status: 400 });
+      }
+      
+      const product = await prisma.product.update({ 
+        where: { id: params.id }, 
+        data: { 
+          quantidade: current.quantidade - quantidade,
+          quantidadeNG: current.quantidadeNG + quantidade 
+        } 
+      });
+      await registrarLog({ 
+        action: 'SUCATA_REGISTRADA', 
+        descricao: `-${quantidade} "${product.nome}" movido para sucata. ${observacao || ''}`, 
+        entidade: 'Product', 
+        entidadeId: params.id, 
+        userId: user.id 
+      });
+      return Response.json(product);
+    }
+
     const { _action, ...data } = body;
     const product = await prisma.product.update({
       where: { id: params.id },

@@ -3,28 +3,47 @@
 import { useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardHeader, CardTitle, Badge, Button, PageHeader, QtyBar, PageLoading } from '@/components/ui';
-import { MovementModal, ProductModal } from '@/components/modals';
+import { MovementModal, ProductModal, NgTransferModal } from '@/components/modals';
 import { useProducts, useClientes } from '@/hooks';
+import { reportsService } from '@/services';
 import type { Product, MovementType } from '@/types';
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, Filter, Download } from 'lucide-react';
 
 export default function EstoquePage() {
   const [search, setSearch] = useState('');
   const [clienteFilter, setClienteFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [showOnlyNG, setShowOnlyNG] = useState(false);
+  const [loadingExport, setLoadingExport] = useState(false);
   const [movModal, setMovModal] = useState<{ open: boolean; type: MovementType; productId?: string }>({ open: false, type: 'ENTRADA' });
   const [prodModal, setProdModal] = useState<{ open: boolean; product?: Product }>({ open: false });
+  const [ngModal, setNgModal] = useState<{ open: boolean; product?: Product }>({ open: false });
 
   const { data: products = [], isLoading } = useProducts(search);
   const { data: clientes = [] } = useClientes();
 
   const filtered = products.filter((p) => {
+    if (showOnlyNG && (!p.quantidadeNG || p.quantidadeNG <= 0)) return false;
     if (clienteFilter && p.clienteId !== clienteFilter) return false;
     if (!statusFilter) return true;
     if (statusFilter === 'critical') return p.quantidade <= p.quantidadeMinima;
     if (statusFilter === 'alert') return p.quantidade <= p.quantidadeMinima * 1.5 && p.quantidade > p.quantidadeMinima;
     return p.quantidade > p.quantidadeMinima * 1.5;
   });
+
+  const totalNG = filtered.reduce((acc, p) => acc + (p.quantidadeNG || 0), 0);
+
+  const handleExportNG = async () => {
+    setLoadingExport(true);
+    try {
+      const blob = await reportsService.excelEstoqueNG();
+      reportsService.download(blob, `sucata_ng_${new Date().toISOString().split('T')[0]}.xlsx`);
+    } catch {
+      alert('Erro ao exportar relatório');
+    } finally {
+      setLoadingExport(false);
+    }
+  };
 
   const getStatusBadge = (p: Product) => {
     if (p.quantidade === 0) return <Badge variant="red">Zerado</Badge>;
@@ -86,8 +105,37 @@ export default function EstoquePage() {
                 <option value="alert">Atenção</option>
                 <option value="critical">Crítico / Zerado</option>
               </select>
+
+              <div className="h-6 w-[1px] bg-slate-200 mx-2 hidden md:block" />
+
+              <label className="flex items-center gap-2 cursor-pointer text-sm font-medium text-slate-600 bg-slate-50 px-3 py-1.5 rounded-md border border-slate-200 hover:bg-slate-100 transition-colors">
+                <input 
+                  type="checkbox" 
+                  checked={showOnlyNG} 
+                  onChange={(e) => setShowOnlyNG(e.target.checked)}
+                  className="rounded text-red-500 focus:ring-red-500 shadow-sm"
+                />
+                Apenas Filtro NG (Sucata)
+              </label>
+
+              {showOnlyNG && (
+                <Button 
+                  variant="danger" 
+                  size="sm" 
+                  onClick={handleExportNG} 
+                  loading={loadingExport}
+                  className="bg-red-600 hover:bg-red-700 font-bold text-white flex items-center"
+                >
+                  <Download size={14} className="mr-1.5" /> Exportar Excel NG
+                </Button>
+              )}
             </div>
-            <Badge variant="gray">{filtered.length} itens</Badge>
+            <div className="flex gap-2 items-center">
+              {showOnlyNG && (
+                <Badge variant="red" className="font-bold border-red-200">Total NG: {totalNG} peças</Badge>
+              )}
+              <Badge variant="gray">{filtered.length} itens</Badge>
+            </div>
           </CardHeader>
 
           {isLoading ? (
@@ -125,7 +173,7 @@ export default function EstoquePage() {
                         <div className="flex items-center gap-1">
                           <Button size="sm" variant="success" onClick={() => setMovModal({ open: true, type: 'ENTRADA', productId: p.id })}>+</Button>
                           <Button size="sm" variant="danger" onClick={() => setMovModal({ open: true, type: 'SAIDA', productId: p.id })}>−</Button>
-                          {/* <Button size="sm" variant="danger" className="bg-red-700 hover:bg-red-800" onClick={() => handleNG...}>NG</Button> */}
+                          <Button size="sm" variant="danger" className="bg-red-700 hover:bg-red-800 border-red-800" onClick={() => setNgModal({ open: true, product: p })}>🔥 NG</Button>
                           <Button size="sm" variant="secondary" onClick={() => setProdModal({ open: true, product: p })}>Ed.</Button>
                         </div>
                       </td>
@@ -146,6 +194,11 @@ export default function EstoquePage() {
         onClose={() => setMovModal({ open: false, type: 'ENTRADA' })}
         type={movModal.type}
         preSelectedProductId={movModal.productId}
+      />
+      <NgTransferModal
+        open={ngModal.open}
+        onClose={() => setNgModal({ open: false })}
+        product={ngModal.product}
       />
       <ProductModal
         open={prodModal.open}

@@ -25,6 +25,17 @@ export const useUpdateProduct = () => {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
   });
 };
+export const useTransferToNG = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, quantidade, observacao }: { id: string; quantidade: number; observacao?: string }) => 
+      productsService.transferToNG(id, quantidade, observacao),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['products'] });
+      qc.invalidateQueries({ queryKey: ['products-stats'] });
+    },
+  });
+};
 
 // Suppliers
 export const useSuppliers = (search?: string) =>

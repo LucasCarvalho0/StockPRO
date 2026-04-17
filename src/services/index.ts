@@ -15,6 +15,8 @@ export const productsService = {
     api.post<Product>('/products', data).then((r) => r.data),
   update: (id: string, data: any) => api.patch<Product>(`/products/${id}`, data).then((r) => r.data),
   deactivate: (id: string) => api.patch(`/products/${id}`, { _action: 'deactivate' }).then((r) => r.data),
+  transferToNG: (id: string, quantidade: number, observacao?: string) => 
+    api.patch(`/products/${id}`, { _action: 'transfer_ng', quantidade, observacao }).then((r) => r.data),
 };
 
 export const suppliersService = {
@@ -75,6 +77,8 @@ export const reportsService = {
     api.get('/reports/excel/inventarios', { responseType: 'blob' }).then((r) => r.data),
   excelEstoque: () =>
     api.get('/reports/excel/estoque', { responseType: 'blob' }).then((r) => r.data),
+  excelEstoqueNG: () =>
+    api.get('/reports/excel/estoque-ng', { responseType: 'blob' }).then((r) => r.data),
   download: (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
