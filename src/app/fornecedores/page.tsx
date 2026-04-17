@@ -81,8 +81,8 @@ export default function FornecedoresPage() {
         </div>
 
         {/* Filter Bar */}
-        <div className="glass p-5 rounded-3xl border border-white/40 shadow-sm flex flex-wrap items-center gap-4">
-          <div className="relative flex-1 min-w-[280px] group">
+        <div className="glass p-4 md:p-5 rounded-2xl md:rounded-3xl border border-white/40 shadow-sm flex flex-col md:flex-row items-center gap-4">
+          <div className="relative w-full md:flex-1 group">
             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
             <input 
               className="w-full pl-12 pr-4 py-3 bg-white/50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium" 
@@ -91,17 +91,17 @@ export default function FornecedoresPage() {
               onChange={(e) => setSearch(e.target.value)} 
             />
           </div>
-          <div className="h-10 w-[1px] bg-slate-200 hidden lg:block mx-1" />
-          <Badge variant="blue" className="h-10 px-4 rounded-xl flex items-center gap-2 border-blue-100/50">
+          <div className="h-10 w-[1px] bg-slate-200 hidden md:block mx-1" />
+          <Badge variant="blue" className="h-[46px] px-6 rounded-2xl flex items-center gap-2 border-blue-100/50 w-full md:w-auto justify-center">
             <Truck size={14} />
-            <span className="font-bold">{suppliers.length} Parceiros</span>
+            <span className="font-bold whitespace-nowrap">{suppliers.length} Parceiros</span>
           </Badge>
         </div>
 
         {/* content */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map(i => <div key={i} className="h-64 bg-white/30 rounded-3xl animate-pulse border border-white/50 shadow-sm" />)}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map(i => <div key={i} className="h-64 bg-white/30 rounded-3xl animate-pulse border border-white/50 shadow-sm" />)}
           </div>
         ) : suppliers.length === 0 ? (
           <div className="py-24 text-center glass rounded-[3rem] border border-dashed border-slate-300/60 max-w-3xl mx-auto w-full">
@@ -112,7 +112,7 @@ export default function FornecedoresPage() {
             <p className="text-slate-500 mt-2">Nenhum fornecedor registrado no sistema.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {suppliers.map((s) => (
               <div key={s.id} className="group bg-white/80 backdrop-blur-sm border border-slate-200/50 rounded-[2rem] p-8 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 relative overflow-hidden">
                 {/* Decorative Icon */}

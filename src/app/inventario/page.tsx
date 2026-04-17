@@ -140,15 +140,15 @@ export default function InventarioPage() {
       <div className="flex flex-col gap-10 p-2 md:p-6 max-w-[1600px] mx-auto">
         
         {/* Header Premium */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 bg-white p-8 rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden group transition-all duration-500 hover:shadow-indigo-200/30">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8 bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden group transition-all duration-500 hover:shadow-indigo-200/30">
           <div className="absolute top-0 left-0 w-2 h-full bg-indigo-600" />
           <div className="relative z-10 flex items-start gap-5">
-            <div className="w-16 h-16 rounded-[1.75rem] bg-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-200 rotate-3 group-hover:rotate-0 transition-transform duration-500">
-               <Layers size={32} strokeWidth={2.5} />
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-[1.25rem] md:rounded-[1.75rem] bg-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-200 rotate-3 group-hover:rotate-0 transition-transform duration-500">
+               <Layers className="w-7 h-7 md:w-8 md:h-8" strokeWidth={2.5} />
             </div>
             <div>
-               <h1 className="text-4xl font-black text-slate-900 tracking-tighter font-display">Controle de Inventário</h1>
-               <p className="text-slate-400 font-bold text-sm mt-1 flex items-center gap-2 italic">
+               <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter font-display">Controle de Inventário</h1>
+               <p className="text-slate-400 font-bold text-[11px] md:text-sm mt-1 flex items-center gap-2 italic">
                  <ShieldCheck size={16} className="text-indigo-500" />
                  Auditoria de Precisão e Integridade Geral
                </p>
@@ -158,11 +158,11 @@ export default function InventarioPage() {
           {!inventarioAtivo && (
             <Button 
                variant="premium" 
-               size="xl" 
+               size="lg" 
                onClick={() => setModalOpen(true)} 
-               className="relative z-10 font-black uppercase text-xs tracking-[0.2em] shadow-2xl"
+               className="relative z-10 font-black uppercase text-[10px] md:text-xs tracking-[0.2em] shadow-2xl"
             >
-              <ClipboardCheck size={20} className="mr-2" /> Iniciar Nova Auditoria
+              <ClipboardCheck size={18} className="mr-2" /> Iniciar Nova Auditoria
             </Button>
           )}
         </div>
@@ -253,29 +253,29 @@ export default function InventarioPage() {
                     return a.product.nome.localeCompare(b.product.nome);
                   })
                   .map((item) => (
-                  <div
+                    <div
                     key={item.id}
                     className={cn(
-                      "group/item flex flex-col lg:flex-row lg:items-center gap-6 p-6 rounded-[2.5rem] transition-all duration-500 border-2",
+                      "group/item flex flex-col md:flex-row md:items-center gap-6 p-5 md:p-6 rounded-2xl md:rounded-[2.5rem] transition-all duration-500 border-2",
                       item.conferido 
                         ? 'bg-indigo-50/50 border-indigo-200/50 shadow-inner' 
                         : 'bg-white border-slate-100 hover:border-indigo-200 hover:shadow-2xl hover:shadow-indigo-100/50'
                     )}
                   >
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4 md:gap-6">
                       <button
                         onClick={() => handleToggleItem(item.id, !item.conferido, item.quantidadeSistema)}
                         className={cn(
-                          "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 border-2 shrink-0",
+                          "w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 border-2 shrink-0",
                           item.conferido 
                             ? 'bg-indigo-600 border-indigo-600 text-white shadow-xl shadow-indigo-200 rotate-[360deg] scale-110' 
                             : 'border-slate-200 text-transparent hover:border-indigo-500 bg-white hover:rotate-12'
                         )}
                       >
-                        <CheckSquare size={24} strokeWidth={3} className={cn("transition-all duration-700", item.conferido ? 'scale-100' : 'scale-0')} />
+                        <CheckSquare strokeWidth={3} className={cn("transition-all duration-700 w-5 h-5 md:w-6 md:h-6", item.conferido ? 'scale-100' : 'scale-0')} />
                       </button>
                       <div className="min-w-0 relative">
-                        <p className={cn("text-xl font-black transition-all truncate tracking-tight mb-1", item.conferido ? 'text-indigo-900' : 'text-slate-900')}>
+                        <p className={cn("text-lg md:text-xl font-black transition-all truncate tracking-tight mb-1", item.conferido ? 'text-indigo-900' : 'text-slate-900')}>
                           {item.product.nome}
                         </p>
                         <div className="flex items-center gap-3">
@@ -293,7 +293,7 @@ export default function InventarioPage() {
                       </div>
                     </div>
 
-                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 items-center gap-6">
+                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 items-center gap-4 md:gap-6">
                        <div className="flex flex-col gap-2">
                           <label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Contagem Real</label>
                           <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border-2 border-slate-100 group-focus-within/item:border-indigo-500 transition-colors shadow-sm">

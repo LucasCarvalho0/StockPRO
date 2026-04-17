@@ -92,8 +92,8 @@ export default function ProdutosPage() {
         </div>
 
         {/* Filter Bar */}
-        <div className="glass p-5 rounded-3xl border border-white/40 shadow-sm flex flex-wrap items-center gap-4">
-          <div className="relative flex-1 min-w-[280px] group">
+        <div className="glass p-4 md:p-5 rounded-2xl md:rounded-3xl border border-white/40 shadow-sm flex flex-col md:flex-row items-center gap-4">
+          <div className="relative w-full md:flex-1 group">
             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
             <input 
               className="w-full pl-12 pr-4 py-3 bg-white/50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-sm font-medium" 
@@ -103,11 +103,11 @@ export default function ProdutosPage() {
             />
           </div>
           
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-4 py-3 bg-white/50 border border-slate-200 rounded-2xl group focus-within:border-indigo-500 transition-all">
+          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <div className="flex-1 md:flex-none flex items-center gap-2 px-4 py-3 bg-white/50 border border-slate-200 rounded-2xl group focus-within:border-indigo-500 transition-all">
               <Filter size={16} className="text-slate-400" />
               <select 
-                className="bg-transparent outline-none text-sm text-slate-600 font-bold min-w-[180px] cursor-pointer" 
+                className="bg-transparent outline-none text-sm text-slate-600 font-bold min-w-0 md:min-w-[180px] w-full cursor-pointer" 
                 value={clienteFilter} 
                 onChange={(e) => setClienteFilter(e.target.value)}
               >
@@ -118,12 +118,10 @@ export default function ProdutosPage() {
             
             <div className="h-10 w-[1px] bg-slate-200 hidden lg:block mx-2" />
             
-            <div className="flex items-center gap-2">
-              <Badge variant="blue" className="h-10 px-4 rounded-xl flex items-center gap-2 border-blue-100/50">
-                <Layers size={14} />
-                <span className="font-bold">{filtered.length} Ativos</span>
-              </Badge>
-            </div>
+            <Badge variant="blue" className="h-[46px] px-4 rounded-2xl flex items-center gap-2 border-blue-100/50 flex-1 md:flex-none justify-center">
+              <Layers size={14} />
+              <span className="font-bold whitespace-nowrap">{filtered.length} Ativos</span>
+            </Badge>
           </div>
         </div>
 

@@ -120,12 +120,12 @@ export default function NfPage() {
         </div>
 
         {/* Filter Bar */}
-        <div className="glass p-5 rounded-3xl border border-white/40 shadow-sm flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-4 flex-1">
-            <div className="flex items-center gap-2 px-4 py-3 bg-white/50 border border-slate-200 rounded-2xl group focus-within:border-blue-500 transition-all">
+        <div className="glass p-4 md:p-5 rounded-2xl md:rounded-3xl border border-white/40 shadow-sm flex flex-col md:flex-row items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:flex-1">
+            <div className="flex items-center gap-2 px-4 py-3 bg-white/50 border border-slate-200 rounded-2xl group focus-within:border-blue-500 transition-all w-full md:w-auto">
               <Filter size={16} className="text-slate-400" />
               <select
-                className="bg-transparent outline-none text-sm text-slate-600 font-bold min-w-[160px] cursor-pointer"
+                className="bg-transparent outline-none text-sm text-slate-600 font-bold min-w-0 md:min-w-[160px] w-full cursor-pointer"
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
               >
@@ -136,7 +136,7 @@ export default function NfPage() {
               </select>
             </div>
 
-            <div className="flex items-center gap-2 px-4 py-3 bg-white/50 border border-slate-200 rounded-2xl group focus-within:border-blue-500 transition-all flex-1 max-w-md">
+            <div className="flex items-center gap-2 px-4 py-3 bg-white/50 border border-slate-200 rounded-2xl group focus-within:border-blue-500 transition-all w-full md:max-w-md">
               <Search size={16} className="text-slate-400" />
               <select
                 className="bg-transparent outline-none text-sm text-slate-600 font-bold w-full cursor-pointer"
@@ -150,8 +150,8 @@ export default function NfPage() {
               </select>
             </div>
           </div>
-          <div className="h-10 w-[1px] bg-slate-200 hidden lg:block mx-1" />
-          <span className="text-sm font-bold text-slate-400 font-mono-custom px-4 uppercase">{nfs.length} DOCUMENTO(S)</span>
+          <div className="h-10 w-[1px] bg-slate-200 hidden md:block mx-1" />
+          <span className="text-[10px] md:text-sm font-black text-slate-400 font-mono-custom px-4 uppercase whitespace-nowrap">{nfs.length} DOCUMENTO(S)</span>
         </div>
 
         {/* NF Feed */}

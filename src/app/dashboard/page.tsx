@@ -53,18 +53,18 @@ export default function DashboardPage() {
   return (
     <>
     <DashboardLayout>
-      <div className="p-8 flex flex-col gap-10 fade-in max-w-[1700px] mx-auto min-h-screen bg-slate-50/20">
+      <div className="p-4 md:p-8 flex flex-col gap-6 md:gap-10 fade-in max-w-[1700px] mx-auto min-h-screen bg-slate-50/20">
         
         {/* Header Ultra Premium */}
-        <div className="relative group overflow-hidden bg-white p-8 rounded-[3rem] border border-slate-100 shadow-2xl shadow-slate-200/50 flex flex-col lg:flex-row lg:items-center justify-between gap-8 transition-all duration-500 hover:shadow-indigo-100/40">
+        <div className="relative group overflow-hidden bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-2xl shadow-slate-200/50 flex flex-col md:flex-row md:items-center justify-between gap-8 transition-all duration-500 hover:shadow-indigo-100/40">
            <div className="absolute top-0 left-0 w-2 h-full bg-indigo-600" />
            <div className="relative z-10">
               <div className="flex items-center gap-4 mb-2">
-                <div className="w-14 h-14 rounded-[1.5rem] bg-gradient-to-br from-indigo-600 to-violet-700 flex items-center justify-center text-white shadow-xl shadow-indigo-200 rotate-3 group-hover:rotate-0 transition-transform duration-500">
-                   <Activity size={28} strokeWidth={2.5} />
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-[1.2rem] md:rounded-[1.5rem] bg-gradient-to-br from-indigo-600 to-violet-700 flex items-center justify-center text-white shadow-xl shadow-indigo-200 rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                   <Activity size={24} strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h1 className="text-4xl font-black text-slate-900 tracking-tighter font-display">Hub de Comando</h1>
+                  <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tighter font-display">Hub de Comando</h1>
                   <Badge variant="glass" className="mt-1 font-black">Status: Operação em Tempo Real</Badge>
                 </div>
               </div>
@@ -74,11 +74,11 @@ export default function DashboardPage() {
               </p>
            </div>
            
-           <div className="flex flex-wrap items-center gap-4 relative z-10">
+           <div className="flex flex-wrap items-center gap-3 md:gap-4 relative z-10">
               <Button 
                 variant="secondary" 
-                size="lg"
-                className="rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest gap-3 border-dashed border-slate-200 hover:border-indigo-300"
+                size="md"
+                className="rounded-2xl font-black uppercase text-[10px] tracking-widest gap-2 md:gap-3 border-dashed border-slate-200 hover:border-indigo-300 flex-1 md:flex-none"
                 onClick={async () => {
                   try {
                     toast.loading('Gerando backup...');
@@ -99,37 +99,37 @@ export default function DashboardPage() {
                   }
                 }}
               >
-                <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
-                  <DatabaseBackup size={16} />
+                <div className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+                  <DatabaseBackup size={14} />
                 </div>
                 Backup
               </Button>
               <Button 
                 variant="secondary" 
-                size="lg"
-                className="rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest gap-3"
+                size="md"
+                className="rounded-2xl font-black uppercase text-[10px] tracking-widest gap-2 md:gap-3 flex-1 md:flex-none"
                 onClick={() => reportsService.excelEstoque().then(b => reportsService.download(b, `estoque-${new Date().toISOString().slice(0,10)}.xlsx`))}
               >
-                <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
-                  <FileSpreadsheet size={16} />
+                <div className="w-6 h-6 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+                  <FileSpreadsheet size={14} />
                 </div>
                 Inventário Full
               </Button>
               <Button 
                 variant="premium"
-                size="lg"
-                className="rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest gap-3"
+                size="md"
+                className="rounded-2xl font-black uppercase text-[10px] tracking-widest gap-2 md:gap-3 w-full md:w-auto"
                 onClick={() => ultimoInv && reportsService.pdfInventario(ultimoInv.id).then(b => reportsService.download(b, `inventario-${ultimoInv.responsavel}.pdf`))}
                 disabled={!ultimoInv}
               >
-                <FileText size={18} />
+                <FileText size={16} />
                 Gerar Relatório Final
               </Button>
            </div>
         </div>
 
         {/* Grade de Métricas Premium: 5 Colunas */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
           <StatCard 
             label="Volume em Estoque" 
             value={stats?.total ?? 0} 
@@ -143,7 +143,7 @@ export default function DashboardPage() {
             sub="Ruptura ou Estoque Baixo" 
             accent="#f43f5e" 
             icon={AlertTriangle}
-            valueClass="text-4xl font-black text-rose-600"
+            valueClass="text-3xl md:text-4xl font-black text-rose-600"
           />
           <StatCard 
             label="Movimento/Dia" 
@@ -151,7 +151,7 @@ export default function DashboardPage() {
             sub={`${resumoHoje?.entradas ?? 0} IN / ${resumoHoje?.saidas ?? 0} OUT`} 
             accent="#f59e0b" 
             icon={TrendingUp}
-            valueClass="text-4xl font-black text-amber-600" 
+            valueClass="text-3xl md:text-4xl font-black text-amber-600" 
           />
           <StatCard 
             label="Time em Campo" 
@@ -159,7 +159,7 @@ export default function DashboardPage() {
             sub={invAtivo ? `Agente: ${invAtivo.responsavel.split(' ')[0]}` : 'Posto vago'} 
             accent="#10b981" 
             icon={CheckCircle2}
-            valueClass="text-4xl font-black text-emerald-600"
+            valueClass="text-3xl md:text-4xl font-black text-emerald-600"
             footer={invAtivo ? (
               <div className="flex items-center gap-2 text-[10px] text-emerald-700 font-black bg-emerald-100/50 px-3 py-1 rounded-full w-fit animate-pulse border border-emerald-200">
                 <Clock size={12} strokeWidth={3} /> SESSÃO ATIVA
@@ -172,12 +172,12 @@ export default function DashboardPage() {
             sub={ultimoInv ? `Ref: ${ultimoInv.responsavel.split(' ')[0]}` : 'Sem histórico'} 
             accent="#8b5cf6" 
             icon={ShieldCheck}
-            valueClass="text-3xl font-black text-indigo-700" 
+            valueClass="text-2xl md:text-3xl font-black text-indigo-700" 
           />
         </div>
 
         {/* Centro Analítico */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
           <Card className="xl:col-span-2 group">
             <CardHeader className="flex flex-row items-center justify-between">
                <div className="flex items-center gap-4">
@@ -368,13 +368,13 @@ export default function DashboardPage() {
         {/* Feed de Logs Premium */}
         <Card className="relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50/30 rounded-full -mr-32 -mt-32 transition-transform duration-1000 group-hover:scale-150" />
-          <CardHeader className="relative z-10 flex flex-row items-center justify-between border-b border-slate-50">
+          <CardHeader className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-50">
              <div className="flex items-center gap-4">
-               <div className="w-14 h-14 rounded-[1.5rem] bg-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-100">
+               <div className="w-12 h-12 md:w-14 md:h-14 rounded-[1.2rem] md:rounded-[1.5rem] bg-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-100">
                  <ShieldCheck size={28} />
                </div>
                <div>
-                 <CardTitle className="text-2xl">Pátio de Operações</CardTitle>
+                 <CardTitle className="text-xl md:text-2xl">Pátio de Operações</CardTitle>
                  <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-1">Sincronização Ativa de Logística</p>
                </div>
              </div>
@@ -386,8 +386,8 @@ export default function DashboardPage() {
                Relatório Histórico
              </Button>
           </CardHeader>
-          <div className="p-8 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="p-6 md:p-8 relative z-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {logs.slice(0, 12).map((log: any) => (
                 <div key={log.id} className="flex flex-col gap-3 p-5 rounded-[1.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all group scale-100 hover:scale-[1.02]">
                   <div className="flex items-center justify-between">
