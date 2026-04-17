@@ -173,7 +173,7 @@ export default function NfPage() {
               const cfg = statusConfig[nf.status as keyof typeof statusConfig];
               const totalItens = nf.items.reduce((s: number, i: any) => s + i.quantidade, 0);
               const totalBaixado = nf.items.reduce((s: number, i: any) => s + i.quantidadeBaixada, 0);
-              const pctBaixado = totalItens > 0 ? Math.round((totalBaixado / totalItens) * 100) : 0;
+              const pctBaixado = totalItens > 0 ? Math.round(((totalBaixado || 0) / totalItens) * 100) : 0;
               const Icon = cfg.icon;
 
               return (

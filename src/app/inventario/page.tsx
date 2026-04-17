@@ -122,7 +122,7 @@ export default function InventarioPage() {
 
   const conferidos = inventarioAtivo?.items.filter((i) => i.conferido).length ?? 0;
   const total = inventarioAtivo?.items.length ?? 0;
-  const pct = total > 0 ? Math.round((conferidos / total) * 100) : 0;
+  const pct = total > 0 ? Math.round(((conferidos || 0) / total) * 100) : 0;
 
   const getDuration = (start: string | Date, end: string | Date | null) => {
     if (!end) return '-';

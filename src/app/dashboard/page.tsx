@@ -341,7 +341,7 @@ export default function DashboardPage() {
               {alertsAtivos.slice(0, 6).map((a) => (
                 <div key={a.id} className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-rose-100 hover:shadow-lg hover:shadow-rose-200/20 transition-all group">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center text-white font-black text-xs shadow-lg shadow-rose-200">
-                    {Math.round((a.quantidadeAtual / a.quantidadeMinima) * 100)}%
+                    {a.quantidadeMinima > 0 ? Math.round(((a.quantidadeAtual || 0) / a.quantidadeMinima) * 100) : 0}%
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[13px] font-black text-slate-800 truncate group-hover:text-rose-600 transition-colors uppercase tracking-tight">{a.product.nome}</p>
