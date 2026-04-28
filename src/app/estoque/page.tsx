@@ -79,14 +79,14 @@ export default function EstoquePage() {
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
-                  className="pl-8 pr-3 py-1.5 text-sm border border-slate-200 rounded-md outline-none focus:border-blue-400 text-slate-700 w-44"
+                  className="pl-8 pr-3 py-1.5 text-sm border border-slate-200 rounded-md outline-none focus:border-blue-400 text-slate-700 w-full sm:w-44"
                   placeholder="Código ou produto..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
               <select
-                className="px-3 py-1.5 text-sm border border-slate-200 rounded-md outline-none focus:border-blue-400 text-slate-600 w-44"
+                className="px-3 py-1.5 text-sm border border-slate-200 rounded-md outline-none focus:border-blue-400 text-slate-600 w-full sm:w-44"
                 value={clienteFilter}
                 onChange={(e) => setClienteFilter(e.target.value)}
               >
@@ -96,7 +96,7 @@ export default function EstoquePage() {
                 ))}
               </select>
               <select
-                className="px-3 py-1.5 text-sm border border-slate-200 rounded-md outline-none focus:border-blue-400 text-slate-600"
+                className="px-3 py-1.5 text-sm border border-slate-200 rounded-md outline-none focus:border-blue-400 text-slate-600 w-full sm:w-auto"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
@@ -145,9 +145,15 @@ export default function EstoquePage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50">
-                    {['Código', 'Produto', 'Modelo', 'Cliente', 'Quantidade', 'Qtd. NG', 'Mín.', 'Status', 'Ações'].map((h) => (
-                      <th key={h} className="text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">{h}</th>
-                    ))}
+                    <th className="text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">Código</th>
+                    <th className="text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">Produto</th>
+                    <th className="hidden md:table-cell text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">Modelo</th>
+                    <th className="hidden lg:table-cell text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">Cliente</th>
+                    <th className="text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">Quantidade</th>
+                    <th className="hidden sm:table-cell text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">Qtd. NG</th>
+                    <th className="hidden xl:table-cell text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">Mín.</th>
+                    <th className="hidden md:table-cell text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">Status</th>
+                    <th className="text-left px-4 py-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider font-mono-custom whitespace-nowrap">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
@@ -155,8 +161,8 @@ export default function EstoquePage() {
                     <tr key={p.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-4 py-3 text-[11px] text-slate-400 font-mono-custom whitespace-nowrap">{p.codigo}</td>
                       <td className="px-4 py-3 text-[13px] font-medium text-slate-800">{p.nome}</td>
-                      <td className="px-4 py-3 text-[12px] text-slate-500">{(p as any).modelo || '-'}</td>
-                      <td className="px-4 py-3">
+                      <td className="hidden md:table-cell px-4 py-3 text-[12px] text-slate-500">{(p as any).modelo || '-'}</td>
+                      <td className="hidden lg:table-cell px-4 py-3">
                         {(p as any).cliente && (
                           <span className="text-[11px] px-2 py-0.5 rounded font-mono-custom bg-blue-50 text-blue-700 border border-blue-100">
                             {(p as any).cliente.nome}
@@ -166,9 +172,9 @@ export default function EstoquePage() {
                       <td className="px-4 py-3 w-36">
                         <QtyBar value={p.quantidade} min={p.quantidadeMinima} max={Math.max(p.quantidade, p.quantidadeMinima || 1) * 2} />
                       </td>
-                      <td className="px-4 py-3 text-[12px] font-mono-custom text-red-500 font-bold">{p.quantidadeNG > 0 ? p.quantidadeNG : '-'}</td>
-                      <td className="px-4 py-3 text-[12px] text-slate-400 font-mono-custom">{p.quantidadeMinima}</td>
-                      <td className="px-4 py-3">{getStatusBadge(p)}</td>
+                      <td className="hidden sm:table-cell px-4 py-3 text-[12px] font-mono-custom text-red-500 font-bold">{p.quantidadeNG > 0 ? p.quantidadeNG : '-'}</td>
+                      <td className="hidden xl:table-cell px-4 py-3 text-[12px] text-slate-400 font-mono-custom">{p.quantidadeMinima}</td>
+                      <td className="hidden md:table-cell px-4 py-3">{getStatusBadge(p)}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
                           <Button size="sm" variant="success" onClick={() => setMovModal({ open: true, type: 'ENTRADA', productId: p.id })}>+</Button>

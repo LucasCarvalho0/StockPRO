@@ -119,13 +119,13 @@ export function ProductModal({ open, onClose, product }: { open: boolean; onClos
     <Modal open={open} onClose={onClose} title={isEdit ? 'Editar Produto' : 'Novo Produto'} width="max-w-lg">
       <form onSubmit={handleSubmit(onSubmit)}>
         <ModalBody className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="Código" placeholder="EST-001" error={errors.codigo?.message} {...register('codigo')} disabled={isEdit} />
             <Input label="Unidade" placeholder="un / kg / l" error={errors.unidade?.message} {...register('unidade')} />
           </div>
           <Input label="Nome do Produto" error={errors.nome?.message} {...register('nome')} />
           <Textarea label="Descrição (opcional)" rows={2} {...register('descricao')} />
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Input label="Quantidade" type="number" min={0} error={errors.quantidade?.message} {...register('quantidade')} />
             <Input label="Qtd NG (Sucata)" type="number" min={0} error={errors.quantidadeNG?.message} {...register('quantidadeNG')} />
             <Input label="Qtd Mínima" type="number" min={0} error={errors.quantidadeMinima?.message} {...register('quantidadeMinima')} />
@@ -246,7 +246,7 @@ export function SupplierModal({ open, onClose, supplier }: { open: boolean; onCl
       <form onSubmit={handleSubmit(onSubmit)}>
         <ModalBody className="flex flex-col gap-4">
           <Input label="Razão Social / Nome" error={errors.nome?.message} {...register('nome')} />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="CNPJ" placeholder="00.000.000/0001-00" {...register('cnpj')} />
             <Input label="Telefone" {...register('telefone')} />
           </div>
@@ -284,7 +284,7 @@ export function UserModal({ open, onClose }: { open: boolean; onClose: () => voi
     <Modal open={open} onClose={() => { reset(); onClose(); }} title="Novo Usuário">
       <form onSubmit={handleSubmit(onSubmit)}>
         <ModalBody className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="Matrícula" error={errors.matricula?.message} {...register('matricula')} />
             <Select label="Perfil" error={errors.role?.message} {...register('role')}>
               <option value="ESTOQUISTA">Estoquista</option>
@@ -363,7 +363,7 @@ export function MovementsDetailModal({ open, onClose, movements }: {
             </div>
           ) : (
             movements.map((m: any) => (
-              <div key={m.id} className="group grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1.5fr] hover:bg-indigo-50/30 transition-all duration-200">
+              <div key={m.id} className="group grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr_1.5fr] hover:bg-indigo-50/30 transition-all duration-200">
                 {/* Material */}
                 <div className="px-8 py-5 flex items-center gap-4 border-r border-slate-50">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md shrink-0 ${m.type === 'ENTRADA' ? 'bg-emerald-500 shadow-emerald-200' : 'bg-rose-500 shadow-rose-200'}`}>

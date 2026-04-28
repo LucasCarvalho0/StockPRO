@@ -52,7 +52,7 @@ export function Card({ children, className, ...props }: React.HTMLAttributes<HTM
   return <div className={cn('bg-white border border-slate-100 rounded-[2rem] shadow-xl shadow-slate-200/40 relative overflow-hidden', className)} {...props}>{children}</div>;
 }
 export function CardHeader({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn('flex items-center justify-between px-8 py-6 border-b border-slate-50 bg-slate-50/30', className)}>{children}</div>;
+  return <div className={cn('flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 md:px-8 py-4 md:py-6 border-b border-slate-50 bg-slate-50/30', className)}>{children}</div>;
 }
 export function CardTitle({ children, className }: { children: React.ReactNode; className?: string }) {
   return <h3 className={cn('text-lg font-bold text-slate-800 tracking-tight font-display', className)}>{children}</h3>;
@@ -186,12 +186,16 @@ export function QtyBar({ value, min, max }: { value: number; min: number; max: n
 // PageHeader Modern
 export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: React.ReactNode }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10 pb-6 border-b border-slate-100">
+    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8 md:mb-10 pb-6 border-b border-slate-100">
       <div>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight font-display">{title}</h1>
-        {subtitle && <p className="text-sm font-semibold text-slate-400 mt-1.5 tracking-wide italic">{subtitle}</p>}
+        <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight font-display">{title}</h1>
+        {subtitle && <p className="text-xs md:text-sm font-semibold text-slate-400 mt-1 tracking-wide italic">{subtitle}</p>}
       </div>
-      {actions && <div className="flex items-center gap-3">{actions}</div>}
+      {actions && (
+        <div className="flex flex-wrap items-center gap-2 md:gap-3">
+          {actions}
+        </div>
+      )}
     </div>
   );
 }

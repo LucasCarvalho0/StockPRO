@@ -32,21 +32,36 @@ export function Sidebar() {
   const { isSidebarCollapsed, toggleSidebar, setSidebarCollapsed, isMobileMenuOpen, setMobileMenuOpen } = useUIStore();
   const { data: resumo } = useAlertsResumo();
 
-  // Fecha o menu mobile ao trocar de rota e gerencia colapso automático
+  // Fecha o menu mobile ao trocar de rota
   useEffect(() => {
     setMobileMenuOpen(false);
+  }, [pathname, setMobileMenuOpen]);
+
+  // Gerencia colapso automático inteligente (apenas no threshold)
+  useEffect(() => {
+    let lastWidth = window.innerWidth;
     
-    // Auto collapse em telas menores que 1280px (notebooks de 13/15 pol e tablets)
     const handleResize = () => {
-      if (window.innerWidth < 1280 && !isSidebarCollapsed) {
+      const currentWidth = window.innerWidth;
+      
+      // Se cruzou o threshold de 1280px vindo de cima
+      if (currentWidth < 1280 && lastWidth >= 1280) {
         setSidebarCollapsed(true);
+      } 
+      // Se cruzou o threshold de 1280px vindo de baixo
+      else if (currentWidth >= 1280 && lastWidth < 1280) {
+        setSidebarCollapsed(false);
       }
+      
+      lastWidth = currentWidth;
     };
 
-    handleResize(); // Executa ao montar
+    // Estado inicial baseado na largura atual
+    if (window.innerWidth < 1280) setSidebarCollapsed(true);
+    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [pathname, setMobileMenuOpen, isSidebarCollapsed, setSidebarCollapsed]);
+  }, [setSidebarCollapsed]);
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 

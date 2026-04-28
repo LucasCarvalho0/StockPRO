@@ -56,7 +56,7 @@ export default function DashboardPage() {
       <div className="p-4 md:p-8 flex flex-col gap-6 md:gap-10 fade-in max-w-[1700px] mx-auto min-h-screen bg-slate-50/20">
         
         {/* Header Ultra Premium */}
-        <div className="relative group overflow-hidden bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-2xl shadow-slate-200/50 flex flex-col md:flex-row md:items-center justify-between gap-8 transition-all duration-500 hover:shadow-indigo-100/40">
+        <div className="relative group overflow-hidden bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-2xl shadow-slate-200/50 flex flex-col lg:flex-row lg:items-center justify-between gap-8 transition-all duration-500 hover:shadow-indigo-100/40">
            <div className="absolute top-0 left-0 w-2 h-full bg-indigo-600" />
            <div className="relative z-10">
               <div className="flex items-center gap-4 mb-2">
@@ -177,8 +177,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Centro Analítico */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          <Card className="md:col-span-2 group">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+          <Card className="lg:col-span-2 group">
             <CardHeader className="flex flex-row items-center justify-between">
                <div className="flex items-center gap-4">
                  <div className="w-12 h-12 rounded-[1rem] bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-sm">
@@ -271,8 +271,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Atividades e Alertas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="md:col-span-2 group">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <Card className="lg:col-span-2 group">
             <CardHeader className="flex flex-row items-center justify-between">
                <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-[1rem] bg-indigo-50 flex items-center justify-center text-indigo-600">
