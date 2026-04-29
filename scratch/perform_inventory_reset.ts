@@ -1,43 +1,54 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function resetInventory() {
-  console.log('🚀 Iniciando reset geral de inventário...');
+async function main() {
+  console.log("🧨 Iniciando RESET TOTAL do inventário...");
 
-  // 1. Backup simples em log (Console)
-  const totalItems = await prisma.product.aggregate({ _sum: { quantidade: true } });
-  console.log(`📊 Saldo total antes do reset: ${totalItems._sum.quantidade}`);
+  // 1. Limpar Movimentações
+  const movements = await prisma.movement.deleteMany({});
+  console.log(`✓ ${movements.count} movimentações removidas`);
 
-  // 2. Limpar Itens de Inventário
-  const deletedItems = await prisma.inventoryItem.deleteMany({});
-  console.log(`✅ ${deletedItems.count} itens de sessões de inventário removidos.`);
+  // 2. Limpar Itens de Nota Fiscal e Notas Fiscais
+  const nfItems = await prisma.nfItem.deleteMany({});
+  const nfs = await prisma.notaFiscalCliente.deleteMany({});
+  console.log(`✓ ${nfItems.count} itens de NF e ${nfs.count} notas fiscais removidas`);
 
-  // 3. Limpar sessões de Inventário
-  const deletedInventories = await prisma.inventory.deleteMany({});
-  console.log(`✅ ${deletedInventories.count} sessões de inventário removidas.`);
+  // 3. Limpar Inventários e Itens de Inventário
+  const invItems = await prisma.inventoryItem.deleteMany({});
+  const invs = await prisma.inventory.deleteMany({});
+  console.log(`✓ ${invItems.count} itens de inventário e ${invs.count} inventários removidos`);
 
   // 4. Limpar Alertas
-  const deletedAlerts = await prisma.alert.deleteMany({});
-  console.log(`✅ ${deletedAlerts.count} alertas de divergência/estoque baixo removidos.`);
+  const alerts = await prisma.alert.deleteMany({});
+  console.log(`✓ ${alerts.count} alertas removidos`);
 
-  // 5. Zerar quantidades de produtos
-  const updatedProducts = await prisma.product.updateMany({
-    data: { quantidade: 0 }
+  // 5. Zerar quantidades de todos os produtos
+  const products = await prisma.product.updateMany({
+    data: {
+      quantidade: 0,
+      quantidadeNG: 0
+    }
   });
-  console.log(`✅ Estoque de ${updatedProducts.count} produtos zerado com sucesso.`);
+  console.log(`✓ ${products.count} produtos zerados (Estoque e NG)`);
 
-  // 6. Registrar Log do Reset
+  // 6. Registrar o log de reset
   await prisma.log.create({
     data: {
-      action: 'INVENTARIO_FINALIZADO',
-      descricao: 'RESET GERAL: Estoque zerado e histórico de inventário limpo para nova contagem.',
+      action: "PRODUTO_EDITADO",
+      descricao: "RESET TOTAL de inventário realizado para novo inventário físico",
+      entidade: "SYSTEM"
     }
   });
 
-  console.log('\n✨ O sistema está pronto para o novo inventário de amanhã!');
+  console.log("\n✅ RESET CONCLUÍDO! O sistema está pronto para um novo inventário físico.");
 }
 
-resetInventory()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect());
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
