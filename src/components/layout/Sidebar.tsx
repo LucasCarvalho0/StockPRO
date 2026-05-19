@@ -88,6 +88,8 @@ export function Sidebar() {
     ESTOQUISTA: 'bg-amber-500/20 text-amber-300 border-amber-400/30',
   };
 
+  const isCollapsed = isSidebarCollapsed && !isMobileMenuOpen;
+
   return (
     <>
       {/* Overlay para mobile */}
@@ -101,14 +103,14 @@ export function Sidebar() {
       <aside 
         className={cn(
           'fixed inset-y-0 left-0 lg:static h-screen flex flex-col transition-all duration-300 ease-in-out z-50',
-          isSidebarCollapsed ? 'w-[70px]' : 'w-[260px]',
+          isCollapsed ? 'w-[70px]' : 'w-[260px]',
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )} 
         style={{ background: '#0f172a', borderRight: '1px solid rgba(255,255,255,0.06)' }}
       >
       {/* Brand & Toggle */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-white/5">
-        {!isSidebarCollapsed && (
+        {!isCollapsed && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
               <Lucide.Package className="text-white" size={18} />
@@ -116,16 +118,16 @@ export function Sidebar() {
             <span className="font-display font-bold text-white text-lg tracking-tight">StockPRO</span>
           </div>
         )}
-        {isSidebarCollapsed && (
+        {isCollapsed && (
           <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center mx-auto">
             <Lucide.Package className="text-white" size={20} />
           </div>
         )}
         <button 
           onClick={toggleSidebar}
-          className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg hover:bg-indigo-500 transition-colors z-50"
+          className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-indigo-600 text-white items-center justify-center shadow-lg hover:bg-indigo-500 transition-colors z-50 lg:flex hidden"
         >
-          {isSidebarCollapsed ? <Lucide.ChevronRight size={14} /> : <Lucide.ChevronLeft size={14} />}
+          {isCollapsed ? <Lucide.ChevronRight size={14} /> : <Lucide.ChevronLeft size={14} />}
         </button>
       </div>
 
@@ -135,7 +137,7 @@ export function Sidebar() {
           if (!grouped[key]?.length) return null;
           return (
             <div key={key} className="space-y-1">
-              {!isSidebarCollapsed && (
+              {!isCollapsed && (
                 <p className="px-3 mb-2 text-[10px] font-bold tracking-[0.15em] uppercase text-slate-500 font-display">
                   {label}
                 </p>
@@ -147,7 +149,7 @@ export function Sidebar() {
                   <Link 
                     key={item.href} 
                     href={item.href}
-                    title={isSidebarCollapsed ? item.label : ''}
+                    title={isCollapsed ? item.label : ''}
                     className={cn(
                       'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative',
                       isActive 
@@ -155,19 +157,19 @@ export function Sidebar() {
                         : 'text-slate-400 hover:text-slate-100 hover:bg-white/5'
                     )}
                   >
-                    <Icon size={isSidebarCollapsed ? 20 : 18} className={cn('flex-shrink-0 transition-transform duration-200', isActive ? 'scale-110' : 'opacity-70 group-hover:opacity-100')} />
-                    {!isSidebarCollapsed && <span className="text-[13.5px] truncate">{item.label}</span>}
+                    <Icon size={isCollapsed ? 20 : 18} className={cn('flex-shrink-0 transition-transform duration-200', isActive ? 'scale-110' : 'opacity-70 group-hover:opacity-100')} />
+                    {!isCollapsed && <span className="text-[13.5px] truncate">{item.label}</span>}
                     
                     {item.badge && resumo && resumo.ativos > 0 && (
                       <span className={cn(
                         'bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full',
-                        isSidebarCollapsed ? 'absolute top-1 right-1 w-4 h-4' : 'ml-auto px-1.5 py-0.5'
+                        isCollapsed ? 'absolute top-1 right-1 w-4 h-4' : 'ml-auto px-1.5 py-0.5'
                       )}>
                         {resumo.ativos}
                       </span>
                     )}
                     
-                    {isActive && !isSidebarCollapsed && (
+                    {isActive && !isCollapsed && (
                       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-indigo-500 rounded-l-full shadow-[0_0_12px_rgba(99,102,241,0.5)]" />
                     )}
                   </Link>
@@ -179,8 +181,8 @@ export function Sidebar() {
       </div>
 
       {/* User Profile Card */}
-      <div className={cn('p-4 border-t border-white/5 bg-slate-900/40 mt-auto', isSidebarCollapsed ? 'items-center' : '')}>
-        {!isSidebarCollapsed ? (
+      <div className={cn('p-4 border-t border-white/5 bg-slate-900/40 mt-auto', isCollapsed ? 'items-center flex flex-col justify-center' : '')}>
+        {!isCollapsed ? (
           <div className="space-y-4">
             <div className="flex flex-col gap-3">
               <div className={cn(
@@ -196,7 +198,7 @@ export function Sidebar() {
             </div>
             <button 
               onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium transition-all duration-200 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/20"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium transition-all duration-200 bg-rose-500/10 text-rose-400 hover:bg-rose-50 hover:text-white border border-rose-500/20"
             >
               <Lucide.LogOut size={14} /> Sair do sistema
             </button>
@@ -209,7 +211,7 @@ export function Sidebar() {
             <button 
               onClick={handleLogout}
               title="Sair do sistema"
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/20 transition-all"
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-50 hover:text-white border border-rose-500/20 transition-all"
             >
               <Lucide.LogOut size={18} />
             </button>

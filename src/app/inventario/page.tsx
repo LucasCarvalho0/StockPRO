@@ -256,13 +256,13 @@ export default function InventarioPage() {
                     <div
                     key={item.id}
                     className={cn(
-                      "group/item flex flex-col md:flex-row md:items-center gap-6 p-5 md:p-6 rounded-2xl md:rounded-[2.5rem] transition-all duration-500 border-2",
+                      "group/item flex flex-col lg:flex-row lg:items-center gap-8 p-5 lg:p-6 rounded-2xl md:rounded-[2.5rem] transition-all duration-500 border-2",
                       item.conferido 
                         ? 'bg-indigo-50/50 border-indigo-200/50 shadow-inner' 
                         : 'bg-white border-slate-100 hover:border-indigo-200 hover:shadow-2xl hover:shadow-indigo-100/50'
                     )}
                   >
-                    <div className="flex items-center gap-4 md:gap-6">
+                    <div className="flex items-center gap-4 lg:gap-6">
                       <button
                         onClick={() => handleToggleItem(item.id, !item.conferido, item.quantidadeSistema)}
                         className={cn(
